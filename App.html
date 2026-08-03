@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFMS</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Google Sans", "Segoe UI", Roboto, Arial, sans-serif;
+        background: #f4f6f8;
+        color: #1a1a1a;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .pfms-header {
+        background: #1b4332;
+        color: #ffffff;
+        padding: 32px 24px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        line-height: 1.4;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        flex-shrink: 0;
+      }
+
+      .pfms-content {
+        flex: 1;
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .pfms-screen {
+        display: none;
+        min-height: 100%;
+        padding: 32px 24px;
+      }
+
+      .pfms-screen.pfms-active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .pfms-screen-form.pfms-active {
+        justify-content: flex-start;
+      }
+
+      .pfms-home {
+        width: 100%;
+        max-width: 620px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .pfms-btn {
+        display: block;
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        padding: 28px 24px;
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+        text-align: center;
+        cursor: pointer;
+        line-height: 1.3;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+      }
+
+      .pfms-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+      }
+
+      .pfms-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        opacity: 0.95;
+      }
+
+      .pfms-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .pfms-btn-receive {
+        background: #2d6a4f;
+      }
+
+      .pfms-btn-pay {
+        background: #c1121f;
+      }
+
+      .pfms-btn-properties {
+        background: #1d4e89;
+      }
+
+      .pfms-btn-companies {
+        background: #0077b6;
+      }
+
+      .pfms-btn-dashboard {
+        background: #e85d04;
+      }
+
+      .pfms-btn-reports {
+        background: #6a0572;
+      }
+
+      .pfms-btn-settings {
+        background: #6c757d;
+      }
+
+      .pfms-panel {
+        width: 100%;
+        max-width: 620px;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 40px 32px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        text-align: center;
+      }
+
+      .pfms-panel-form {
+        max-width: 860px;
+        text-align: left;
+        border: 1px solid #d0d7de;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      .pfms-panel-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1b4332;
+        text-align: center;
+      }
+
+      .pfms-panel-text {
+        font-size: 16px;
+        color: #5f6368;
+        margin-bottom: 28px;
+        line-height: 1.5;
+      }
+
+      .pfms-btn-back {
+        background: #1b4332;
+        max-width: 280px;
+        margin: 0 auto;
+        font-size: 16px;
+        padding: 16px 24px;
+      }
+
+      .pfms-form-group {
+        margin-bottom: 20px;
+      }
+
+      .pfms-form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: #1b4332;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+
+      .pfms-form-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 20px;
+      }
+
+      .pfms-form-column {
+        min-width: 0;
+      }
+
+      .pfms-property-scroll {
+        max-height: 350px;
+        overflow-y: auto;
+        border: 1px solid #d0d7de;
+        border-radius: 10px;
+        background: #fafbfc;
+        padding: 12px;
+      }
+
+      .pfms-property-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .pfms-property-btn {
+        border: 2px solid #d0d7de;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #1a1a1a;
+        padding: 14px 12px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: none;
+        text-align: left;
+        transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+      }
+
+      .pfms-property-btn:hover {
+        transform: none;
+        border-color: #2d6a4f;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .pfms-property-btn.pfms-selected {
+        background: #2d6a4f;
+        border-color: #2d6a4f;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(45, 106, 79, 0.24);
+      }
+
+      .pfms-selected-property {
+        background: #e8f5e9;
+        border: 2px solid #2d6a4f;
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-top: 16px;
+      }
+
+      .pfms-selected-property-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #2d6a4f;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 4px;
+      }
+
+      .pfms-selected-property-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1b4332;
+      }
+
+      .pfms-form-control {
+        width: 100%;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: 15px;
+        font-family: inherit;
+        background: #ffffff;
+        color: #1a1a1a;
+      }
+
+      .pfms-form-control:focus {
+        outline: none;
+        border-color: #2d6a4f;
+        box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+      }
+
+      .pfms-radio-group {
+        display: flex;
+        gap: 24px;
+      }
+
+      .pfms-radio-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .pfms-radio-label input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      .pfms-form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .pfms-btn-save {
+        background: #2d6a4f;
+        flex: 1;
+        font-size: 16px;
+        padding: 16px 20px;
+        border-radius: 10px;
+      }
+
+      .pfms-btn-cancel {
+        background: #6c757d;
+        flex: 1;
+        font-size: 16px;
+        padding: 16px 20px;
+        border-radius: 10px;
+      }
+
+      .pfms-success-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .pfms-success-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2d6a4f;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .pfms-success-details {
+        background: #fafbfc;
+        border: 1px solid #d0d7de;
+        border-radius: 10px;
+        padding: 20px 24px;
+        margin-bottom: 8px;
+      }
+
+      .pfms-success-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid #e8eaed;
+      }
+
+      .pfms-success-row:last-child {
+        border-bottom: none;
+      }
+
+      .pfms-success-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #5f6368;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+
+      .pfms-success-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1b4332;
+        text-align: right;
+      }
+
+      .pfms-hidden {
+        display: none;
+      }
+
+      .pfms-form-error {
+        color: #c1121f;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 8px;
+      }
+
+      .pfms-panel-properties {
+        max-width: 860px;
+        text-align: left;
+        border: 1px solid #d0d7de;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      .pfms-properties-toolbar {
+        display: flex;
+        gap: 10px;
+        margin: 20px 0 16px;
+        flex-wrap: wrap;
+      }
+
+      .pfms-btn-toolbar {
+        width: auto;
+        padding: 12px 18px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+
+      .pfms-btn-new {
+        background: #1d4e89;
+      }
+
+      .pfms-btn-edit {
+        background: #e85d04;
+      }
+
+      .pfms-btn-archive {
+        background: #6c757d;
+      }
+
+      .pfms-properties-table-wrap {
+        max-height: 420px;
+        overflow: auto;
+        border: 1px solid #d0d7de;
+        border-radius: 10px;
+        background: #ffffff;
+      }
+
+      .pfms-properties-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      .pfms-properties-table th,
+      .pfms-properties-table td {
+        padding: 12px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e8eaed;
+      }
+
+      .pfms-properties-table th {
+        background: #fafbfc;
+        font-size: 12px;
+        font-weight: 700;
+        color: #1b4332;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      .pfms-properties-table tbody tr {
+        cursor: pointer;
+      }
+
+      .pfms-properties-table tbody tr:hover {
+        background: #f4f6f8;
+      }
+
+      .pfms-properties-table tbody tr.pfms-row-selected {
+        background: #e8f5e9;
+      }
+
+      .pfms-properties-empty {
+        padding: 24px;
+        text-align: center;
+        color: #5f6368;
+      }
+
+      .pfms-properties-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .pfms-properties-form-grid .pfms-form-group-full {
+        grid-column: 1 / -1;
+      }
+
+      .pfms-footer {
+        background: #1b4332;
+        color: #ffffff;
+        text-align: center;
+        padding: 14px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="pfms-header">
+      PROPERTY FINANCIAL MANAGEMENT SYSTEM
+    </header>
+
+    <main class="pfms-content">
+      <section id="screen-home" class="pfms-screen<?!= initialScreen === 'home' ? ' pfms-active' : '' ?>">
+        <div class="pfms-home">
+          <button type="button" class="pfms-btn pfms-btn-receive" onclick="showScreen('receive-payment')">
+            &#x1F7E2; RECEIVE PAYMENT
+          </button>
+
+          <button type="button" class="pfms-btn pfms-btn-pay" onclick="showScreen('make-payment')">
+            &#x1F534; MAKE PAYMENT
+          </button>
+
+          <button type="button" class="pfms-btn pfms-btn-properties" onclick="showScreen('properties')">
+            &#x1F3E0; PROPERTIES
+          </button>
+
+          <button type="button" class="pfms-btn pfms-btn-companies" onclick="showScreen('companies')">
+            &#x1F3E2; COMPANIES
+          </button>
+
+          <button type="button" class="pfms-btn pfms-btn-dashboard" onclick="showScreen('dashboard')">
+            &#x1F4CA; DASHBOARD
+          </button>
+
+          <button type="button" class="pfms-btn pfms-btn-reports" onclick="showScreen('reports')">
+            &#x1F4C8; REPORTS
+          </button>
+
+          <button type="button" class="pfms-btn pfms-btn-settings" onclick="showScreen('settings')">
+            &#x2699; SETTINGS
+          </button>
+        </div>
+      </section>
+
+      <section id="screen-receive-payment" class="pfms-screen pfms-screen-form<?!= initialScreen === 'receive-payment' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel pfms-panel-form">
+          <div id="receive-payment-form-view">
+            <h2 class="pfms-panel-title">RECEIVE PAYMENT</h2>
+
+            <div id="receive-selected-property" class="pfms-selected-property pfms-hidden">
+              <div class="pfms-selected-property-label">Property</div>
+              <div id="receive-selected-property-value" class="pfms-selected-property-value"></div>
+            </div>
+
+            <form id="receive-payment-form" onsubmit="return false;">
+              <div class="pfms-form-layout">
+                <div class="pfms-form-column">
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label">Property</label>
+                    <div class="pfms-property-scroll">
+                      <div class="pfms-property-grid" id="receive-property-grid"></div>
+                    </div>
+                    <div id="receive-property-error" class="pfms-form-error pfms-hidden">Please select a property.</div>
+                  </div>
+                </div>
+
+                <div class="pfms-form-column">
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="receive-income-type">Income Type</label>
+                    <select id="receive-income-type" class="pfms-form-control">
+                      <option value="Rent">Rent</option>
+                      <option value="Security Deposit">Security Deposit</option>
+                      <option value="Parking">Parking</option>
+                      <option value="Other Income">Other Income</option>
+                    </select>
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <span class="pfms-form-label">Currency</span>
+                    <div class="pfms-radio-group">
+                      <label class="pfms-radio-label">
+                        <input type="radio" name="receive-currency" value="USD" checked>
+                        USD
+                      </label>
+                      <label class="pfms-radio-label">
+                        <input type="radio" name="receive-currency" value="CRC">
+                        CRC
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="receive-amount">Amount</label>
+                    <input type="number" id="receive-amount" class="pfms-form-control" min="0" step="0.01">
+                    <div id="receive-amount-error" class="pfms-form-error pfms-hidden">Please enter an amount.</div>
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="receive-date">Date</label>
+                    <input type="date" id="receive-date" class="pfms-form-control">
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="receive-notes">Notes</label>
+                    <textarea id="receive-notes" class="pfms-form-control" rows="4"></textarea>
+                  </div>
+
+                  <div class="pfms-form-actions">
+                    <button type="button" id="receive-save-btn" class="pfms-btn pfms-btn-save" onclick="saveReceivePayment()">
+                      SAVE PAYMENT
+                    </button>
+                    <button type="button" class="pfms-btn pfms-btn-cancel" onclick="cancelReceivePayment()">
+                      CANCEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div id="receive-payment-success-view" class="pfms-hidden">
+            <h2 class="pfms-success-title">&#x2714; Payment Saved</h2>
+            <div class="pfms-success-details">
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Property</span>
+                <span id="receive-success-property" class="pfms-success-value"></span>
+              </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Amount</span>
+                <span id="receive-success-amount" class="pfms-success-value"></span>
+              </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Currency</span>
+                <span id="receive-success-currency" class="pfms-success-value"></span>
+              </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Date</span>
+                <span id="receive-success-date" class="pfms-success-value"></span>
+              </div>
+            </div>
+            <div class="pfms-success-actions">
+              <button type="button" class="pfms-btn pfms-btn-save" onclick="startNewReceivePayment()">
+                NEW PAYMENT
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
+                HOME
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-make-payment" class="pfms-screen pfms-screen-form<?!= initialScreen === 'make-payment' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel pfms-panel-form">
+          <div id="make-payment-form-view">
+            <h2 class="pfms-panel-title">MAKE PAYMENT</h2>
+
+            <div id="make-selected-property" class="pfms-selected-property pfms-hidden">
+              <div class="pfms-selected-property-label">Property</div>
+              <div id="make-selected-property-value" class="pfms-selected-property-value"></div>
+            </div>
+
+            <form id="make-payment-form" onsubmit="return false;">
+              <div class="pfms-form-layout">
+                <div class="pfms-form-column">
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label">Property</label>
+                    <div class="pfms-property-scroll">
+                      <div class="pfms-property-grid" id="make-property-grid"></div>
+                    </div>
+                    <div id="make-property-error" class="pfms-form-error pfms-hidden">Please select a property.</div>
+                  </div>
+                </div>
+
+                <div class="pfms-form-column">
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="make-expense-category">Expense Category</label>
+                    <select id="make-expense-category" class="pfms-form-control"></select>
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <span class="pfms-form-label">Currency</span>
+                    <div class="pfms-radio-group">
+                      <label class="pfms-radio-label">
+                        <input type="radio" name="make-currency" value="USD" checked>
+                        USD
+                      </label>
+                      <label class="pfms-radio-label">
+                        <input type="radio" name="make-currency" value="CRC">
+                        CRC
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="make-amount">Amount</label>
+                    <input type="number" id="make-amount" class="pfms-form-control" min="0" step="0.01">
+                    <div id="make-amount-error" class="pfms-form-error pfms-hidden">Please enter an amount.</div>
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="make-date">Date</label>
+                    <input type="date" id="make-date" class="pfms-form-control">
+                  </div>
+
+                  <div class="pfms-form-group">
+                    <label class="pfms-form-label" for="make-notes">Notes</label>
+                    <textarea id="make-notes" class="pfms-form-control" rows="4"></textarea>
+                  </div>
+
+                  <div class="pfms-form-actions">
+                    <button type="button" id="make-save-btn" class="pfms-btn pfms-btn-save" onclick="saveMakePayment()">
+                      SAVE PAYMENT
+                    </button>
+                    <button type="button" class="pfms-btn pfms-btn-cancel" onclick="cancelMakePayment()">
+                      CANCEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div id="make-payment-success-view" class="pfms-hidden">
+            <h2 class="pfms-success-title">&#x2714; Payment Saved</h2>
+            <div class="pfms-success-details">
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Property</span>
+                <span id="make-success-property" class="pfms-success-value"></span>
+              </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Amount</span>
+                <span id="make-success-amount" class="pfms-success-value"></span>
+              </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Currency</span>
+                <span id="make-success-currency" class="pfms-success-value"></span>
+              </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Date</span>
+                <span id="make-success-date" class="pfms-success-value"></span>
+              </div>
+            </div>
+            <div class="pfms-success-actions">
+              <button type="button" class="pfms-btn pfms-btn-save" onclick="startNewMakePayment()">
+                NEW PAYMENT
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
+                HOME
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-properties" class="pfms-screen pfms-screen-form<?!= initialScreen === 'properties' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel pfms-panel-properties">
+          <div id="properties-list-view">
+            <h2 class="pfms-panel-title">PROPERTIES</h2>
+
+            <div class="pfms-properties-toolbar">
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-new" onclick="openNewPropertyForm()">
+                + NEW PROPERTY
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-edit" onclick="openEditPropertyForm()">
+                EDIT
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-archive" onclick="archiveSelectedProperty()">
+                ARCHIVE
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-back" onclick="showScreen('home')">
+                HOME
+              </button>
+            </div>
+
+            <div id="properties-selection-error" class="pfms-form-error pfms-hidden">Please select a property.</div>
+
+            <div class="pfms-properties-table-wrap">
+              <table class="pfms-properties-table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Company</th>
+                    <th>Cedula Juridica</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="properties-table-body"></tbody>
+              </table>
+              <div id="properties-empty-message" class="pfms-properties-empty pfms-hidden">
+                No properties found.
+              </div>
+            </div>
+          </div>
+
+          <div id="properties-form-view" class="pfms-hidden">
+            <h2 id="properties-form-title" class="pfms-panel-title">NEW PROPERTY</h2>
+
+            <form id="properties-form" onsubmit="return false;">
+              <input type="hidden" id="property-id">
+
+              <div class="pfms-properties-form-grid">
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="property-name">Property Name</label>
+                  <input type="text" id="property-name" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="property-company-id">Company</label>
+                  <select id="property-company-id" class="pfms-form-control" onchange="updatePropertyCompanyCedula()"></select>
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="property-cedula-display">Cedula Juridica</label>
+                  <input type="text" id="property-cedula-display" class="pfms-form-control" readonly>
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="property-status">Status</label>
+                  <select id="property-status" class="pfms-form-control">
+                    <option value="Active">Active</option>
+                    <option value="Archived">Archived</option>
+                  </select>
+                </div>
+
+                <div class="pfms-form-group pfms-form-group-full">
+                  <label class="pfms-form-label" for="property-address">Address</label>
+                  <input type="text" id="property-address" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="property-purchase-date">Purchase Date</label>
+                  <input type="date" id="property-purchase-date" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="property-purchase-price">Purchase Price</label>
+                  <input type="number" id="property-purchase-price" class="pfms-form-control" min="0" step="0.01">
+                </div>
+
+                <div class="pfms-form-group">
+                  <span class="pfms-form-label">Currency</span>
+                  <div class="pfms-radio-group">
+                    <label class="pfms-radio-label">
+                      <input type="radio" name="property-currency" value="USD" checked>
+                      USD
+                    </label>
+                    <label class="pfms-radio-label">
+                      <input type="radio" name="property-currency" value="CRC">
+                      CRC
+                    </label>
+                  </div>
+                </div>
+
+                <div class="pfms-form-group pfms-form-group-full">
+                  <label class="pfms-form-label" for="property-notes">Notes</label>
+                  <textarea id="property-notes" class="pfms-form-control" rows="4"></textarea>
+                </div>
+              </div>
+
+              <div id="property-form-error" class="pfms-form-error pfms-hidden"></div>
+
+              <div class="pfms-form-actions">
+                <button type="button" id="property-save-btn" class="pfms-btn pfms-btn-save">
+                  SAVE
+                </button>
+                <button type="button" class="pfms-btn pfms-btn-cancel" onclick="showPropertiesList()">
+                  CANCEL
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-companies" class="pfms-screen pfms-screen-form<?!= initialScreen === 'companies' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel pfms-panel-properties">
+          <div id="companies-list-view">
+            <h2 class="pfms-panel-title">COMPANIES</h2>
+
+            <div class="pfms-properties-toolbar">
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-new" onclick="openNewCompanyForm()">
+                + NEW COMPANY
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-edit" onclick="openEditCompanyForm()">
+                EDIT
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-archive" onclick="archiveSelectedCompany()">
+                ARCHIVE
+              </button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-back" onclick="showScreen('home')">
+                HOME
+              </button>
+            </div>
+
+            <div id="companies-selection-error" class="pfms-form-error pfms-hidden">Please select a company.</div>
+
+            <div class="pfms-properties-table-wrap">
+              <table class="pfms-properties-table">
+                <thead>
+                  <tr>
+                    <th>Company Name</th>
+                    <th>Cedula Juridica</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="companies-table-body"></tbody>
+              </table>
+              <div id="companies-empty-message" class="pfms-properties-empty pfms-hidden">
+                No companies found.
+              </div>
+            </div>
+          </div>
+
+          <div id="companies-form-view" class="pfms-hidden">
+            <h2 id="companies-form-title" class="pfms-panel-title">NEW COMPANY</h2>
+
+            <form id="companies-form" onsubmit="return false;">
+              <input type="hidden" id="company-id">
+
+              <div class="pfms-properties-form-grid">
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="company-name">Company Name</label>
+                  <input type="text" id="company-name" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="company-cedula">Cedula Juridica</label>
+                  <input type="text" id="company-cedula" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="company-status">Status</label>
+                  <select id="company-status" class="pfms-form-control">
+                    <option value="Active">Active</option>
+                    <option value="Archived">Archived</option>
+                  </select>
+                </div>
+
+                <div class="pfms-form-group pfms-form-group-full">
+                  <label class="pfms-form-label" for="company-address">Address</label>
+                  <input type="text" id="company-address" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="company-phone">Phone</label>
+                  <input type="text" id="company-phone" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group">
+                  <label class="pfms-form-label" for="company-email">Email</label>
+                  <input type="text" id="company-email" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group pfms-form-group-full">
+                  <label class="pfms-form-label" for="company-bank">Bank</label>
+                  <input type="text" id="company-bank" class="pfms-form-control">
+                </div>
+
+                <div class="pfms-form-group pfms-form-group-full">
+                  <label class="pfms-form-label" for="company-notes">Notes</label>
+                  <textarea id="company-notes" class="pfms-form-control" rows="4"></textarea>
+                </div>
+              </div>
+
+              <div id="company-form-error" class="pfms-form-error pfms-hidden"></div>
+
+              <div class="pfms-form-actions">
+                <button type="button" id="company-save-btn" class="pfms-btn pfms-btn-save" onclick="saveCompanyForm()">
+                  SAVE
+                </button>
+                <button type="button" class="pfms-btn pfms-btn-cancel" onclick="showCompaniesList()">
+                  CANCEL
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-dashboard" class="pfms-screen<?!= initialScreen === 'dashboard' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel">
+          <h2 class="pfms-panel-title">Dashboard</h2>
+          <p class="pfms-panel-text">Version 1 placeholder screen.</p>
+          <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
+            Back to Home
+          </button>
+        </div>
+      </section>
+
+      <section id="screen-reports" class="pfms-screen<?!= initialScreen === 'reports' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel">
+          <h2 class="pfms-panel-title">Reports</h2>
+          <p class="pfms-panel-text">Version 1 placeholder screen.</p>
+          <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
+            Back to Home
+          </button>
+        </div>
+      </section>
+
+      <section id="screen-settings" class="pfms-screen<?!= initialScreen === 'settings' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel">
+          <h2 class="pfms-panel-title">Settings</h2>
+          <p class="pfms-panel-text">Version 1 placeholder screen.</p>
+          <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
+            Back to Home
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pfms-footer">
+      PFMS Version 1.0
+    </footer>
+
+    <script>
+      var PFMS_INITIAL_SCREEN = '<?= initialScreen ?>';
+      var selectedReceiveProperty = '';
+      var selectedMakeProperty = '';
+      var selectedPropertyId = '';
+      var selectedCompanyId = '';
+      var propertiesCache = [];
+      var companiesCache = [];
+      var propertyCompaniesCache = [];
+
+      function showScreen(screenId) {
+        var screens = document.querySelectorAll('.pfms-screen');
+        for (var i = 0; i < screens.length; i++) {
+          screens[i].classList.remove('pfms-active');
+        }
+
+        var target = document.getElementById('screen-' + screenId);
+        if (target) {
+          target.classList.add('pfms-active');
+        }
+
+        var content = document.querySelector('.pfms-content');
+        if (content) {
+          content.scrollTop = 0;
+        }
+
+        if (screenId === 'receive-payment') {
+          showReceivePaymentForm();
+          initReceivePaymentForm();
+          loadReceiveProperties();
+        }
+
+        if (screenId === 'make-payment') {
+          showMakePaymentForm();
+          initMakePaymentForm();
+          loadMakeProperties();
+          loadMakeExpenseCategories();
+        }
+
+        if (screenId === 'properties') {
+          showPropertiesList();
+          loadPropertiesList();
+        }
+
+        if (screenId === 'companies') {
+          showCompaniesList();
+          loadCompaniesList();
+        }
+      }
+
+      function initializePfmsApp() {
+        var initialScreen = PFMS_INITIAL_SCREEN || 'home';
+        if (initialScreen !== 'home') {
+          showScreen(initialScreen);
+          return;
+        }
+
+        initReceivePaymentForm();
+        initMakePaymentForm();
+      }
+
+      function showReceivePaymentForm() {
+        document.getElementById('receive-payment-form-view').classList.remove('pfms-hidden');
+        document.getElementById('receive-payment-success-view').classList.add('pfms-hidden');
+      }
+
+      function showReceivePaymentSuccess(payment) {
+        document.getElementById('receive-success-property').textContent = payment.property;
+        document.getElementById('receive-success-amount').textContent = payment.amount;
+        document.getElementById('receive-success-currency').textContent = payment.currency;
+        document.getElementById('receive-success-date').textContent = payment.date;
+        document.getElementById('receive-payment-form-view').classList.add('pfms-hidden');
+        document.getElementById('receive-payment-success-view').classList.remove('pfms-hidden');
+      }
+
+      function initReceivePaymentForm() {
+        var dateField = document.getElementById('receive-date');
+        if (dateField && !dateField.value) {
+          dateField.value = getTodayDateString();
+        }
+      }
+
+      function setReceiveSaveButtonState(isSaving) {
+        var saveButton = document.getElementById('receive-save-btn');
+        saveButton.disabled = isSaving;
+        saveButton.textContent = isSaving ? 'Saving...' : 'SAVE PAYMENT';
+      }
+
+      function updateSelectedPropertyDisplay() {
+        var banner = document.getElementById('receive-selected-property');
+        var value = document.getElementById('receive-selected-property-value');
+
+        if (selectedReceiveProperty) {
+          value.textContent = selectedReceiveProperty;
+          banner.classList.remove('pfms-hidden');
+        } else {
+          value.textContent = '';
+          banner.classList.add('pfms-hidden');
+        }
+      }
+
+      function resetReceivePaymentForm() {
+        selectedReceiveProperty = '';
+        document.getElementById('receive-income-type').selectedIndex = 0;
+        document.querySelector('input[name="receive-currency"][value="USD"]').checked = true;
+        document.getElementById('receive-amount').value = '';
+        document.getElementById('receive-date').value = getTodayDateString();
+        document.getElementById('receive-notes').value = '';
+        hideReceiveValidationErrors();
+        updateSelectedPropertyDisplay();
+        setReceiveSaveButtonState(false);
+
+        var buttons = document.querySelectorAll('#receive-property-grid .pfms-property-btn');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].classList.remove('pfms-selected');
+        }
+      }
+
+      function startNewReceivePayment() {
+        resetReceivePaymentForm();
+        showReceivePaymentForm();
+        loadReceiveProperties();
+      }
+
+      function getTodayDateString() {
+        var today = new Date();
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var day = String(today.getDate()).padStart(2, '0');
+        return today.getFullYear() + '-' + month + '-' + day;
+      }
+
+      function loadReceiveProperties() {
+        google.script.run
+          .withSuccessHandler(renderReceiveProperties)
+          .withFailureHandler(function (error) {
+            console.error(error);
+          })
+          .getProperties();
+      }
+
+      function getPropertyName(property) {
+        if (typeof property === 'string') {
+          return property;
+        }
+
+        if (property && property.name) {
+          return property.name;
+        }
+
+        if (property && property.property) {
+          return property.property;
+        }
+
+        return '';
+      }
+
+      function renderReceiveProperties(properties) {
+        var grid = document.getElementById('receive-property-grid');
+        grid.innerHTML = '';
+
+        if (!properties || !properties.length) {
+          return;
+        }
+
+        for (var i = 0; i < properties.length; i++) {
+          var name = getPropertyName(properties[i]);
+          if (!name) {
+            continue;
+          }
+
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'pfms-property-btn';
+          button.setAttribute('data-property', name);
+          button.textContent = name;
+          button.onclick = function () {
+            selectReceiveProperty(this);
+          };
+          grid.appendChild(button);
+        }
+      }
+
+      function selectReceiveProperty(button) {
+        var buttons = document.querySelectorAll('#receive-property-grid .pfms-property-btn');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].classList.remove('pfms-selected');
+        }
+
+        button.classList.add('pfms-selected');
+        selectedReceiveProperty = button.getAttribute('data-property');
+        document.getElementById('receive-property-error').classList.add('pfms-hidden');
+        updateSelectedPropertyDisplay();
+        document.getElementById('receive-amount').focus();
+      }
+
+      function getSelectedReceiveCurrency() {
+        var selected = document.querySelector('input[name="receive-currency"]:checked');
+        return selected ? selected.value : '';
+      }
+
+      function hideReceiveValidationErrors() {
+        document.getElementById('receive-property-error').classList.add('pfms-hidden');
+        document.getElementById('receive-amount-error').classList.add('pfms-hidden');
+      }
+
+      function validateReceivePayment() {
+        hideReceiveValidationErrors();
+
+        var amountValue = document.getElementById('receive-amount').value;
+        var amount = parseFloat(amountValue);
+        var isValid = true;
+
+        if (!selectedReceiveProperty) {
+          document.getElementById('receive-property-error').classList.remove('pfms-hidden');
+          isValid = false;
+        }
+
+        if (!amountValue || isNaN(amount) || amount <= 0) {
+          document.getElementById('receive-amount-error').classList.remove('pfms-hidden');
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      function saveReceivePayment() {
+        if (!validateReceivePayment()) {
+          return;
+        }
+
+        var payment = {
+          property: selectedReceiveProperty,
+          incomeType: document.getElementById('receive-income-type').value,
+          currency: getSelectedReceiveCurrency(),
+          amount: parseFloat(document.getElementById('receive-amount').value),
+          date: document.getElementById('receive-date').value,
+          notes: document.getElementById('receive-notes').value
+        };
+
+        setReceiveSaveButtonState(true);
+
+        google.script.run
+          .withSuccessHandler(function () {
+            setReceiveSaveButtonState(false);
+            showReceivePaymentSuccess(payment);
+          })
+          .withFailureHandler(function (error) {
+            setReceiveSaveButtonState(false);
+            console.error(error);
+          })
+          .saveReceivePayment(payment);
+      }
+
+      function cancelReceivePayment() {
+        showScreen('home');
+      }
+
+      function showMakePaymentForm() {
+        document.getElementById('make-payment-form-view').classList.remove('pfms-hidden');
+        document.getElementById('make-payment-success-view').classList.add('pfms-hidden');
+      }
+
+      function showMakePaymentSuccess(payment) {
+        document.getElementById('make-success-property').textContent = payment.property;
+        document.getElementById('make-success-amount').textContent = payment.amount;
+        document.getElementById('make-success-currency').textContent = payment.currency;
+        document.getElementById('make-success-date').textContent = payment.date;
+        document.getElementById('make-payment-form-view').classList.add('pfms-hidden');
+        document.getElementById('make-payment-success-view').classList.remove('pfms-hidden');
+      }
+
+      function initMakePaymentForm() {
+        var dateField = document.getElementById('make-date');
+        if (dateField && !dateField.value) {
+          dateField.value = getTodayDateString();
+        }
+      }
+
+      function setMakeSaveButtonState(isSaving) {
+        var saveButton = document.getElementById('make-save-btn');
+        saveButton.disabled = isSaving;
+        saveButton.textContent = isSaving ? 'Saving...' : 'SAVE PAYMENT';
+      }
+
+      function updateMakeSelectedPropertyDisplay() {
+        var banner = document.getElementById('make-selected-property');
+        var value = document.getElementById('make-selected-property-value');
+
+        if (selectedMakeProperty) {
+          value.textContent = selectedMakeProperty;
+          banner.classList.remove('pfms-hidden');
+        } else {
+          value.textContent = '';
+          banner.classList.add('pfms-hidden');
+        }
+      }
+
+      function resetMakePaymentForm() {
+        selectedMakeProperty = '';
+        document.getElementById('make-expense-category').selectedIndex = 0;
+        document.querySelector('input[name="make-currency"][value="USD"]').checked = true;
+        document.getElementById('make-amount').value = '';
+        document.getElementById('make-date').value = getTodayDateString();
+        document.getElementById('make-notes').value = '';
+        hideMakeValidationErrors();
+        updateMakeSelectedPropertyDisplay();
+        setMakeSaveButtonState(false);
+
+        var buttons = document.querySelectorAll('#make-property-grid .pfms-property-btn');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].classList.remove('pfms-selected');
+        }
+      }
+
+      function startNewMakePayment() {
+        resetMakePaymentForm();
+        showMakePaymentForm();
+        loadMakeProperties();
+        loadMakeExpenseCategories();
+      }
+
+      function loadMakeProperties() {
+        google.script.run
+          .withSuccessHandler(renderMakeProperties)
+          .withFailureHandler(function (error) {
+            console.error(error);
+          })
+          .getProperties();
+      }
+
+      function loadMakeExpenseCategories() {
+        google.script.run
+          .withSuccessHandler(renderMakeExpenseCategories)
+          .withFailureHandler(function (error) {
+            console.error(error);
+          })
+          .getExpenseCategories();
+      }
+
+      function getCategoryName(category) {
+        if (typeof category === 'string') {
+          return category;
+        }
+
+        if (category && category.name) {
+          return category.name;
+        }
+
+        if (category && category.category) {
+          return category.category;
+        }
+
+        return '';
+      }
+
+      function renderMakeProperties(properties) {
+        var grid = document.getElementById('make-property-grid');
+        grid.innerHTML = '';
+
+        if (!properties || !properties.length) {
+          return;
+        }
+
+        for (var i = 0; i < properties.length; i++) {
+          var name = getPropertyName(properties[i]);
+          if (!name) {
+            continue;
+          }
+
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'pfms-property-btn';
+          button.setAttribute('data-property', name);
+          button.textContent = name;
+          button.onclick = function () {
+            selectMakeProperty(this);
+          };
+          grid.appendChild(button);
+        }
+      }
+
+      function renderMakeExpenseCategories(categories) {
+        var select = document.getElementById('make-expense-category');
+        select.innerHTML = '';
+
+        if (!categories || !categories.length) {
+          return;
+        }
+
+        for (var i = 0; i < categories.length; i++) {
+          var name = getCategoryName(categories[i]);
+          if (!name) {
+            continue;
+          }
+
+          var option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          select.appendChild(option);
+        }
+      }
+
+      function selectMakeProperty(button) {
+        var buttons = document.querySelectorAll('#make-property-grid .pfms-property-btn');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].classList.remove('pfms-selected');
+        }
+
+        button.classList.add('pfms-selected');
+        selectedMakeProperty = button.getAttribute('data-property');
+        document.getElementById('make-property-error').classList.add('pfms-hidden');
+        updateMakeSelectedPropertyDisplay();
+        document.getElementById('make-amount').focus();
+      }
+
+      function getSelectedMakeCurrency() {
+        var selected = document.querySelector('input[name="make-currency"]:checked');
+        return selected ? selected.value : '';
+      }
+
+      function hideMakeValidationErrors() {
+        document.getElementById('make-property-error').classList.add('pfms-hidden');
+        document.getElementById('make-amount-error').classList.add('pfms-hidden');
+      }
+
+      function validateMakePayment() {
+        hideMakeValidationErrors();
+
+        var amountValue = document.getElementById('make-amount').value;
+        var amount = parseFloat(amountValue);
+        var isValid = true;
+
+        if (!selectedMakeProperty) {
+          document.getElementById('make-property-error').classList.remove('pfms-hidden');
+          isValid = false;
+        }
+
+        if (!amountValue || isNaN(amount) || amount <= 0) {
+          document.getElementById('make-amount-error').classList.remove('pfms-hidden');
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      function saveMakePayment() {
+        if (!validateMakePayment()) {
+          return;
+        }
+
+        var payment = {
+          property: selectedMakeProperty,
+          expenseCategory: document.getElementById('make-expense-category').value,
+          currency: getSelectedMakeCurrency(),
+          amount: parseFloat(document.getElementById('make-amount').value),
+          date: document.getElementById('make-date').value,
+          notes: document.getElementById('make-notes').value
+        };
+
+        setMakeSaveButtonState(true);
+
+        google.script.run
+          .withSuccessHandler(function () {
+            setMakeSaveButtonState(false);
+            showMakePaymentSuccess(payment);
+          })
+          .withFailureHandler(function (error) {
+            setMakeSaveButtonState(false);
+            console.error(error);
+          })
+          .saveMakePayment(payment);
+      }
+
+      function cancelMakePayment() {
+        showScreen('home');
+      }
+
+      function reloadPaymentPropertyLists() {
+        loadReceiveProperties();
+        loadMakeProperties();
+      }
+
+      function showPropertiesList() {
+        document.getElementById('properties-list-view').classList.remove('pfms-hidden');
+        document.getElementById('properties-form-view').classList.add('pfms-hidden');
+        document.getElementById('property-id').value = '';
+        document.getElementById('properties-empty-message').classList.add('pfms-hidden');
+        setPropertySaveButtonState(false);
+        hidePropertySelectionError();
+      }
+
+      function showPropertyForm() {
+        document.getElementById('properties-list-view').classList.add('pfms-hidden');
+        document.getElementById('properties-form-view').classList.remove('pfms-hidden');
+      }
+
+      function hidePropertySelectionError() {
+        document.getElementById('properties-selection-error').classList.add('pfms-hidden');
+      }
+
+      function hidePropertyFormError() {
+        var error = document.getElementById('property-form-error');
+        error.classList.add('pfms-hidden');
+        error.textContent = '';
+      }
+
+      function showPropertyFormError(message) {
+        var error = document.getElementById('property-form-error');
+        error.textContent = message;
+        error.classList.remove('pfms-hidden');
+      }
+
+      function normalizeServerList(value) {
+        console.log('[PFMS-028] raw properties:', JSON.stringify(value));
+
+        if (value == null) {
+          return [];
+        }
+
+        if (Array.isArray(value)) {
+          return value;
+        }
+
+        if (typeof value !== 'object') {
+          return [];
+        }
+
+        var entries = {};
+        var seenIndex = {};
+
+        function addIndexedItem(key, item) {
+          var normalizedKey = String(key);
+
+          if (!/^\d+$/.test(normalizedKey) || seenIndex[normalizedKey]) {
+            return;
+          }
+
+          seenIndex[normalizedKey] = true;
+          entries[normalizedKey] = item;
+        }
+
+        function collectIndexedProperties(source) {
+          var cursor = source;
+
+          while (cursor && typeof cursor === 'object' && cursor !== Object.prototype) {
+            try {
+              Object.getOwnPropertyNames(cursor).forEach(function (key) {
+                addIndexedItem(key, source[key]);
+              });
+            } catch (propertyNamesError) {}
+
+            try {
+              Object.keys(cursor).forEach(function (key) {
+                addIndexedItem(key, source[key]);
+              });
+            } catch (keysError) {}
+
+            try {
+              for (var key in cursor) {
+                addIndexedItem(key, source[key]);
+              }
+            } catch (forInError) {}
+
+            cursor = Object.getPrototypeOf(cursor);
+          }
+        }
+
+        collectIndexedProperties(value);
+
+        var index = 0;
+
+        while (index < 10000) {
+          var hasIndex = (index in value) || (String(index) in value);
+
+          if (!hasIndex && value[index] === undefined) {
+            break;
+          }
+
+          if (hasIndex || value[index] !== undefined) {
+            addIndexedItem(String(index), value[index]);
+          } else {
+            break;
+          }
+
+          index++;
+        }
+
+        var numericKeys = Object.keys(entries).sort(function (a, b) {
+          return Number(a) - Number(b);
+        });
+
+        return numericKeys.map(function (key) {
+          return entries[key];
+        });
+      }
+
+      function loadPropertiesList() {
+        google.script.run
+          .withSuccessHandler(function (properties) {
+            var normalizedProperties = normalizeServerList(properties);
+            console.log('[PFMS-027] typeof properties:', typeof properties);
+            console.log('[PFMS-027] properties.length:', properties && properties.length);
+            console.log('[PFMS-027] normalized length:', normalizedProperties.length);
+            renderPropertiesList(normalizedProperties);
+          })
+          .withFailureHandler(function (error) {
+            console.error(error);
+            document.getElementById('properties-selection-error').textContent =
+              error.message || 'Unable to load properties.';
+            document.getElementById('properties-selection-error').classList.remove('pfms-hidden');
+          })
+          .getAllProperties();
+      }
+
+      function renderPropertiesList(properties) {
+        console.log('[PFMS-027] renderPropertiesList entry count:', properties ? properties.length : 0);
+        propertiesCache = properties || [];
+        var tbody = document.getElementById('properties-table-body');
+        var emptyMessage = document.getElementById('properties-empty-message');
+
+        if (!tbody || !emptyMessage) {
+          return;
+        }
+
+        tbody.innerHTML = '';
+        selectedPropertyId = '';
+
+        if (!propertiesCache.length) {
+          emptyMessage.classList.remove('pfms-hidden');
+          return;
+        }
+
+        emptyMessage.classList.add('pfms-hidden');
+
+        for (var i = 0; i < propertiesCache.length; i++) {
+          var property = propertiesCache[i];
+          var row = document.createElement('tr');
+          row.setAttribute('data-property-id', property.propertyId);
+          row.onclick = function () {
+            selectPropertyRow(this);
+          };
+
+          row.innerHTML =
+            '<td>' + escapeHtml(getPropertyName(property)) + '</td>' +
+            '<td>' + escapeHtml(property.companyName || '') + '</td>' +
+            '<td>' + escapeHtml(property.cedulaJuridica || '') + '</td>' +
+            '<td>' + escapeHtml(property.status || '') + '</td>';
+
+          tbody.appendChild(row);
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function selectPropertyRow(row) {
+        var rows = document.querySelectorAll('#properties-table-body tr');
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].classList.remove('pfms-row-selected');
+        }
+
+        row.classList.add('pfms-row-selected');
+        selectedPropertyId = row.getAttribute('data-property-id');
+        hidePropertySelectionError();
+      }
+
+      function getSelectedProperty() {
+        for (var i = 0; i < propertiesCache.length; i++) {
+          if (String(propertiesCache[i].propertyId) === String(selectedPropertyId)) {
+            return propertiesCache[i];
+          }
+        }
+
+        return null;
+      }
+
+      function populatePropertyCompanyDropdown(selectedCompanyId, selectedCompanyName) {
+        var select = document.getElementById('property-company-id');
+        select.innerHTML = '';
+
+        var blankOption = document.createElement('option');
+        blankOption.value = '';
+        blankOption.textContent = '';
+        select.appendChild(blankOption);
+
+        var foundSelected = false;
+
+        for (var i = 0; i < propertyCompaniesCache.length; i++) {
+          var company = propertyCompaniesCache[i];
+          var option = document.createElement('option');
+          option.value = company.companyId;
+          option.textContent = company.name;
+          select.appendChild(option);
+
+          if (String(company.companyId) === String(selectedCompanyId)) {
+            foundSelected = true;
+          }
+        }
+
+        if (selectedCompanyId && !foundSelected && selectedCompanyName) {
+          var archivedOption = document.createElement('option');
+          archivedOption.value = selectedCompanyId;
+          archivedOption.textContent = selectedCompanyName;
+          select.appendChild(archivedOption);
+        }
+
+        select.value = selectedCompanyId || '';
+        updatePropertyCompanyCedula();
+      }
+
+      function loadPropertyCompaniesForForm(selectedCompanyId, selectedCompanyName) {
+        google.script.run
+          .withSuccessHandler(function (companies) {
+            propertyCompaniesCache = companies || [];
+            populatePropertyCompanyDropdown(selectedCompanyId, selectedCompanyName);
+          })
+          .withFailureHandler(function (error) {
+            console.error(error);
+          })
+          .getCompanies();
+      }
+
+      function updatePropertyCompanyCedula() {
+        var select = document.getElementById('property-company-id');
+        var cedulaField = document.getElementById('property-cedula-display');
+        var selectedId = select.value;
+        var cedula = '';
+
+        for (var i = 0; i < propertyCompaniesCache.length; i++) {
+          if (String(propertyCompaniesCache[i].companyId) === String(selectedId)) {
+            cedula = propertyCompaniesCache[i].cedulaJuridica || '';
+            break;
+          }
+        }
+
+        if (!cedula && selectedId) {
+          for (var j = 0; j < propertiesCache.length; j++) {
+            if (String(propertiesCache[j].companyId) === String(selectedId)) {
+              cedula = propertiesCache[j].cedulaJuridica || '';
+              break;
+            }
+          }
+        }
+
+        cedulaField.value = cedula;
+      }
+
+      function openNewPropertyForm() {
+        hidePropertyFormError();
+        setPropertySaveButtonState(false);
+        document.getElementById('properties-form-title').textContent = 'NEW PROPERTY';
+        document.getElementById('property-id').value = '';
+        document.getElementById('property-name').value = '';
+        document.getElementById('property-address').value = '';
+        document.getElementById('property-purchase-date').value = '';
+        document.getElementById('property-purchase-price').value = '';
+        document.querySelector('input[name="property-currency"][value="USD"]').checked = true;
+        document.getElementById('property-status').value = 'Active';
+        document.getElementById('property-notes').value = '';
+        showPropertyForm();
+        loadPropertyCompaniesForForm('', '');
+      }
+
+      function openEditPropertyForm() {
+        var property = getSelectedProperty();
+
+        if (!property) {
+          document.getElementById('properties-selection-error').classList.remove('pfms-hidden');
+          return;
+        }
+
+        hidePropertyFormError();
+        setPropertySaveButtonState(false);
+        document.getElementById('properties-form-title').textContent = 'EDIT PROPERTY';
+        document.getElementById('property-id').value = property.propertyId;
+        document.getElementById('property-name').value = property.name || '';
+        document.getElementById('property-address').value = property.address || '';
+        document.getElementById('property-purchase-date').value = formatDateForInput(property.purchaseDate);
+        document.getElementById('property-purchase-price').value = property.purchasePrice || '';
+        document.querySelector('input[name="property-currency"][value="' + (property.currency || 'USD') + '"]').checked = true;
+        document.getElementById('property-status').value = property.status || 'Active';
+        document.getElementById('property-notes').value = property.notes || '';
+        showPropertyForm();
+        loadPropertyCompaniesForForm(property.companyId || '', property.companyName || '');
+      }
+
+      function formatDateForInput(value) {
+        if (!value) {
+          return '';
+        }
+
+        if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) {
+          var month = String(value.getMonth() + 1).padStart(2, '0');
+          var day = String(value.getDate()).padStart(2, '0');
+          return value.getFullYear() + '-' + month + '-' + day;
+        }
+
+        return String(value).substring(0, 10);
+      }
+
+      function getSelectedPropertyCurrency() {
+        var selected = document.querySelector('input[name="property-currency"]:checked');
+        return selected ? selected.value : 'USD';
+      }
+
+      function setPropertySaveButtonState(isSaving) {
+        var saveButton = document.getElementById('property-save-btn');
+        if (!saveButton) {
+          return;
+        }
+
+        saveButton.disabled = isSaving;
+        saveButton.textContent = isSaving ? 'Saving...' : 'SAVE';
+      }
+
+      function savePropertyForm() {
+        hidePropertyFormError();
+
+        try {
+          var propertyData = {
+            propertyId: document.getElementById('property-id').value,
+            name: document.getElementById('property-name').value.trim(),
+            companyId: document.getElementById('property-company-id').value,
+            address: document.getElementById('property-address').value.trim(),
+            purchaseDate: document.getElementById('property-purchase-date').value,
+            purchasePrice: document.getElementById('property-purchase-price').value,
+            currency: getSelectedPropertyCurrency(),
+            status: document.getElementById('property-status').value,
+            notes: document.getElementById('property-notes').value.trim()
+          };
+
+          if (!propertyData.name) {
+            showPropertyFormError('Property name is required.');
+            return;
+          }
+
+          setPropertySaveButtonState(true);
+
+          google.script.run
+            .withSuccessHandler(function (result) {
+              setPropertySaveButtonState(false);
+
+              if (!result || !result.success) {
+                var message = result && result.errors ? result.errors.join(' ') : 'Unable to save property.';
+                showPropertyFormError(message);
+                return;
+              }
+
+              showPropertiesList();
+              loadPropertiesList();
+              reloadPaymentPropertyLists();
+            })
+            .withFailureHandler(function (error) {
+              setPropertySaveButtonState(false);
+              showPropertyFormError(error && error.message ? error.message : 'Unable to save property.');
+            })
+            ['saveProperty'](propertyData);
+        } catch (error) {
+          setPropertySaveButtonState(false);
+          showPropertyFormError(error && error.message ? error.message : 'Unable to save property.');
+        }
+      }
+
+      function archiveSelectedProperty() {
+        if (!selectedPropertyId) {
+          document.getElementById('properties-selection-error').classList.remove('pfms-hidden');
+          return;
+        }
+
+        hidePropertySelectionError();
+
+        google.script.run
+          .withSuccessHandler(function (result) {
+            if (!result || !result.success) {
+              var message = result && result.errors ? result.errors.join(' ') : 'Unable to archive property.';
+              document.getElementById('properties-selection-error').textContent = message;
+              document.getElementById('properties-selection-error').classList.remove('pfms-hidden');
+              return;
+            }
+
+            loadPropertiesList();
+            reloadPaymentPropertyLists();
+          })
+          .withFailureHandler(function (error) {
+            document.getElementById('properties-selection-error').textContent = error.message || 'Unable to archive property.';
+            document.getElementById('properties-selection-error').classList.remove('pfms-hidden');
+          })
+          .archiveProperty(selectedPropertyId);
+      }
+
+      function showCompaniesList() {
+        document.getElementById('companies-list-view').classList.remove('pfms-hidden');
+        document.getElementById('companies-form-view').classList.add('pfms-hidden');
+        hideCompanySelectionError();
+      }
+
+      function showCompanyForm() {
+        document.getElementById('companies-list-view').classList.add('pfms-hidden');
+        document.getElementById('companies-form-view').classList.remove('pfms-hidden');
+      }
+
+      function hideCompanySelectionError() {
+        document.getElementById('companies-selection-error').classList.add('pfms-hidden');
+        document.getElementById('companies-selection-error').textContent = 'Please select a company.';
+      }
+
+      function hideCompanyFormError() {
+        var error = document.getElementById('company-form-error');
+        error.classList.add('pfms-hidden');
+        error.textContent = '';
+      }
+
+      function showCompanyFormError(message) {
+        var error = document.getElementById('company-form-error');
+        error.textContent = message;
+        error.classList.remove('pfms-hidden');
+      }
+
+      function loadCompaniesList() {
+        google.script.run
+          .withSuccessHandler(renderCompaniesList)
+          .withFailureHandler(function (error) {
+            console.error(error);
+          })
+          .getAllCompanies();
+      }
+
+      function renderCompaniesList(companies) {
+        companiesCache = companies || [];
+        var tbody = document.getElementById('companies-table-body');
+        var emptyMessage = document.getElementById('companies-empty-message');
+        tbody.innerHTML = '';
+        selectedCompanyId = '';
+
+        if (!companiesCache.length) {
+          emptyMessage.classList.remove('pfms-hidden');
+          return;
+        }
+
+        emptyMessage.classList.add('pfms-hidden');
+
+        for (var i = 0; i < companiesCache.length; i++) {
+          var company = companiesCache[i];
+          var row = document.createElement('tr');
+          row.setAttribute('data-company-id', company.companyId);
+          row.onclick = function () {
+            selectCompanyRow(this);
+          };
+
+          row.innerHTML =
+            '<td>' + escapeHtml(company.name || '') + '</td>' +
+            '<td>' + escapeHtml(company.cedulaJuridica || '') + '</td>' +
+            '<td>' + escapeHtml(company.status || '') + '</td>';
+
+          tbody.appendChild(row);
+        }
+      }
+
+      function selectCompanyRow(row) {
+        var rows = document.querySelectorAll('#companies-table-body tr');
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].classList.remove('pfms-row-selected');
+        }
+
+        row.classList.add('pfms-row-selected');
+        selectedCompanyId = row.getAttribute('data-company-id');
+        hideCompanySelectionError();
+      }
+
+      function getSelectedCompany() {
+        for (var i = 0; i < companiesCache.length; i++) {
+          if (String(companiesCache[i].companyId) === String(selectedCompanyId)) {
+            return companiesCache[i];
+          }
+        }
+
+        return null;
+      }
+
+      function openNewCompanyForm() {
+        hideCompanyFormError();
+        document.getElementById('companies-form-title').textContent = 'NEW COMPANY';
+        document.getElementById('company-id').value = '';
+        document.getElementById('company-name').value = '';
+        document.getElementById('company-cedula').value = '';
+        document.getElementById('company-address').value = '';
+        document.getElementById('company-phone').value = '';
+        document.getElementById('company-email').value = '';
+        document.getElementById('company-bank').value = '';
+        document.getElementById('company-status').value = 'Active';
+        document.getElementById('company-notes').value = '';
+        showCompanyForm();
+      }
+
+      function openEditCompanyForm() {
+        var company = getSelectedCompany();
+
+        if (!company) {
+          document.getElementById('companies-selection-error').classList.remove('pfms-hidden');
+          return;
+        }
+
+        hideCompanyFormError();
+        document.getElementById('companies-form-title').textContent = 'EDIT COMPANY';
+        document.getElementById('company-id').value = company.companyId;
+        document.getElementById('company-name').value = company.name || '';
+        document.getElementById('company-cedula').value = company.cedulaJuridica || '';
+        document.getElementById('company-address').value = company.address || '';
+        document.getElementById('company-phone').value = company.phone || '';
+        document.getElementById('company-email').value = company.email || '';
+        document.getElementById('company-bank').value = company.bank || '';
+        document.getElementById('company-status').value = company.status || 'Active';
+        document.getElementById('company-notes').value = company.notes || '';
+        showCompanyForm();
+      }
+
+      function setCompanySaveButtonState(isSaving) {
+        var saveButton = document.getElementById('company-save-btn');
+        saveButton.disabled = isSaving;
+        saveButton.textContent = isSaving ? 'Saving...' : 'SAVE';
+      }
+
+      function saveCompanyForm() {
+        hideCompanyFormError();
+
+        var companyData = {
+          companyId: document.getElementById('company-id').value,
+          name: document.getElementById('company-name').value.trim(),
+          cedulaJuridica: document.getElementById('company-cedula').value.trim(),
+          address: document.getElementById('company-address').value.trim(),
+          phone: document.getElementById('company-phone').value.trim(),
+          email: document.getElementById('company-email').value.trim(),
+          bank: document.getElementById('company-bank').value.trim(),
+          status: document.getElementById('company-status').value,
+          notes: document.getElementById('company-notes').value.trim()
+        };
+
+        if (!companyData.name) {
+          showCompanyFormError('Company name is required.');
+          return;
+        }
+
+        setCompanySaveButtonState(true);
+
+        google.script.run
+          .withSuccessHandler(function (result) {
+            setCompanySaveButtonState(false);
+
+            if (!result || !result.success) {
+              var message = result && result.errors ? result.errors.join(' ') : 'Unable to save company.';
+              showCompanyFormError(message);
+              return;
+            }
+
+            showCompaniesList();
+            loadCompaniesList();
+          })
+          .withFailureHandler(function (error) {
+            setCompanySaveButtonState(false);
+            showCompanyFormError(error.message || 'Unable to save company.');
+          })
+          .saveCompany(companyData);
+      }
+
+      function archiveSelectedCompany() {
+        if (!selectedCompanyId) {
+          document.getElementById('companies-selection-error').classList.remove('pfms-hidden');
+          return;
+        }
+
+        hideCompanySelectionError();
+
+        google.script.run
+          .withSuccessHandler(function (result) {
+            if (!result || !result.success) {
+              var message = result && result.errors ? result.errors.join(' ') : 'Unable to archive company.';
+              document.getElementById('companies-selection-error').textContent = message;
+              document.getElementById('companies-selection-error').classList.remove('pfms-hidden');
+              return;
+            }
+
+            loadCompaniesList();
+          })
+          .withFailureHandler(function (error) {
+            document.getElementById('companies-selection-error').textContent = error.message || 'Unable to archive company.';
+            document.getElementById('companies-selection-error').classList.remove('pfms-hidden');
+          })
+          .archiveCompany(selectedCompanyId);
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        initializePfmsApp();
+
+        var propertySaveButton = document.getElementById('property-save-btn');
+        var propertiesForm = document.getElementById('properties-form');
+
+        if (propertySaveButton) {
+          propertySaveButton.addEventListener('click', savePropertyForm);
+        }
+
+        if (propertiesForm) {
+          propertiesForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            savePropertyForm();
+          });
+        }
+
+        document.getElementById('receive-amount').addEventListener('keydown', function (event) {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById('receive-notes').focus();
+          }
+        });
+
+        document.getElementById('make-amount').addEventListener('keydown', function (event) {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById('make-notes').focus();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
