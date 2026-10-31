@@ -10,8 +10,7 @@
  * (PFMS_DEFAULT_PEOPLE).
  *
  * The chosen name is sent as payment.enteredBy to saveReceivePayment and
- * saveMakePayment. To store it on the payment rows, add payment.enteredBy
- * to the row those functions append.
+ * saveMakePayment, and EnteredBy.gs writes it onto the saved row.
  */
 
 /**

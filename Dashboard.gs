@@ -159,17 +159,18 @@ function getDashboardData(options) {
 
 /* ---------- reading the sheets ---------- */
 
-function readDashboardTransactions_(timeZone) {
+// The income and expense tabs, chosen by Script Properties when set and
+// by headers / tab names otherwise. Shared by Dashboard, Reports and
+// EnteredBy.gs so they always agree on which tabs hold payments.
+function listPaymentSheets_() {
   var spreadsheet = getPfmsSpreadsheet_();
   var scriptProperties = PropertiesService.getScriptProperties();
   var incomeNames = splitSheetList_(scriptProperties.getProperty('PFMS_INCOME_SHEETS'));
   var expenseNames = splitSheetList_(scriptProperties.getProperty('PFMS_EXPENSE_SHEETS'));
   var configured = incomeNames.length > 0 || expenseNames.length > 0;
 
-  var transactions = [];
-  var sources = [];
+  var sheets = [];
   var skipped = [];
-  var order = 0;
 
   spreadsheet.getSheets().forEach(function (sheet) {
     var name = sheet.getName();
@@ -208,7 +209,24 @@ function readDashboardTransactions_(timeZone) {
       return;
     }
 
+    sheets.push({ sheet: sheet, name: name, type: type, values: values, columns: columns });
+  });
+
+  return { sheets: sheets, skipped: skipped };
+}
+
+function readDashboardTransactions_(timeZone) {
+  var found = listPaymentSheets_();
+  var transactions = [];
+  var sources = [];
+  var order = 0;
+
+  found.sheets.forEach(function (entry) {
+    var type = entry.type;
+    var columns = entry.columns;
+    var values = entry.values;
     var rowsUsed = 0;
+
     for (var r = 1; r < values.length; r++) {
       var row = values[r];
       var date = toIsoDate_(row[columns.date], timeZone);
@@ -237,10 +255,10 @@ function readDashboardTransactions_(timeZone) {
       rowsUsed++;
     }
 
-    sources.push({ sheet: name, type: type, rows: rowsUsed });
+    sources.push({ sheet: entry.name, type: type, rows: rowsUsed });
   });
 
-  return { transactions: transactions, sources: sources, skipped: skipped };
+  return { transactions: transactions, sources: sources, skipped: found.skipped };
 }
 
 function mapDashboardColumns_(headerRow) {
