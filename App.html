@@ -4980,6 +4980,16 @@
             return runServer(options.serverFunction, payment);
           })
           .then(function () {
+            // Write the name onto the row Code.gs just saved (EnteredBy.gs).
+            // The payment is already saved, so a failure here only logs.
+            if (!payment.enteredBy) {
+              return null;
+            }
+            return runServer('recordEnteredBy', options.paymentType, payment).catch(function (error) {
+              console.error(error);
+            });
+          })
+          .then(function () {
             if (!savedAttachments.length) {
               return false;
             }
