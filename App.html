@@ -643,6 +643,482 @@
         color: #1d4e89;
       }
 
+      /* ---------- Dashboard ---------- */
+
+      :root {
+        --pfms-income: #2f9e44;
+        --pfms-expense: #e8590c;
+        --pfms-ink: #1a1a1a;
+        --pfms-ink-secondary: #5f6368;
+        --pfms-grid: #e8eaed;
+      }
+
+      .pfms-panel-dashboard {
+        max-width: 960px;
+        text-align: left;
+        border: 1px solid #d0d7de;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      .pfms-dash-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 8px 0 20px;
+      }
+
+      .pfms-month-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pfms-month-btn {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #d0d7de;
+        border-radius: 10px;
+        background: #ffffff;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        color: #1b4332;
+      }
+
+      .pfms-month-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      .pfms-month-label {
+        min-width: 150px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1b4332;
+      }
+
+      .pfms-currency-toggle {
+        display: flex;
+        border: 1px solid #d0d7de;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .pfms-currency-toggle button {
+        border: none;
+        background: #ffffff;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        color: var(--pfms-ink);
+      }
+
+      .pfms-currency-toggle button + button {
+        border-left: 1px solid #d0d7de;
+      }
+
+      .pfms-currency-toggle button.pfms-selected {
+        background: #1b4332;
+        color: #ffffff;
+      }
+
+      .pfms-dash-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .pfms-btn-refresh {
+        background: #1d4e89;
+      }
+
+      .pfms-dash-actions .pfms-btn-back {
+        margin: 0;
+      }
+
+      .pfms-dash-status {
+        padding: 32px 16px;
+        text-align: center;
+        color: var(--pfms-ink-secondary);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .pfms-dash-status ul {
+        display: inline-block;
+        text-align: left;
+        margin-top: 8px;
+      }
+
+      .pfms-dash-note {
+        background: #f4f6f8;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: var(--pfms-ink-secondary);
+        margin-bottom: 16px;
+      }
+
+      .pfms-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .pfms-kpi {
+        border: 1px solid #d0d7de;
+        border-radius: 12px;
+        padding: 16px;
+        background: #ffffff;
+      }
+
+      .pfms-kpi-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--pfms-ink-secondary);
+      }
+
+      .pfms-kpi-value {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--pfms-ink);
+        margin-top: 6px;
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+      }
+
+      .pfms-kpi-sub {
+        font-size: 12px;
+        color: var(--pfms-ink-secondary);
+        margin-top: 4px;
+      }
+
+      .pfms-swatch {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+
+      .pfms-swatch-income {
+        background: var(--pfms-income);
+      }
+
+      .pfms-swatch-expense {
+        background: var(--pfms-expense);
+      }
+
+      .pfms-dash-card {
+        position: relative;
+        border: 1px solid #d0d7de;
+        border-radius: 12px;
+        padding: 16px;
+        background: #ffffff;
+        margin-bottom: 16px;
+        min-width: 0;
+      }
+
+      .pfms-dash-card-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .pfms-dash-card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1b4332;
+        margin-bottom: 8px;
+      }
+
+      .pfms-dash-card-head .pfms-dash-card-title {
+        margin-bottom: 0;
+      }
+
+      .pfms-dash-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .pfms-legend {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--pfms-ink-secondary);
+      }
+
+      .pfms-legend > span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .pfms-trend-chart {
+        width: 100%;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .pfms-trend-chart svg {
+        display: block;
+        width: 100%;
+        overflow: visible;
+      }
+
+      .pfms-chart-tooltip {
+        position: absolute;
+        z-index: 2;
+        pointer-events: none;
+        background: #ffffff;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        padding: 8px 10px;
+        font-size: 13px;
+        color: var(--pfms-ink);
+        min-width: 150px;
+      }
+
+      .pfms-chart-tooltip-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .pfms-chart-tooltip-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        justify-content: space-between;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .pfms-chart-tooltip-row > span:first-child {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--pfms-ink-secondary);
+      }
+
+      .pfms-link-btn {
+        border: none;
+        background: none;
+        color: #1d4e89;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        padding: 6px 0 0;
+        text-decoration: underline;
+      }
+
+      .pfms-dash-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .pfms-dash-table th,
+      .pfms-dash-table td {
+        padding: 8px 6px;
+        border-bottom: 1px solid var(--pfms-grid);
+        text-align: right;
+      }
+
+      .pfms-dash-table th:first-child,
+      .pfms-dash-table td:first-child {
+        text-align: left;
+        white-space: normal;
+      }
+
+      .pfms-dash-table td {
+        white-space: nowrap;
+      }
+
+      .pfms-dash-table th {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        color: var(--pfms-ink-secondary);
+      }
+
+      .pfms-dash-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .pfms-dash-table-wrap {
+        overflow-x: auto;
+      }
+
+      .pfms-cat-row {
+        display: grid;
+        grid-template-columns: minmax(80px, 40%) 1fr;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+        font-size: 14px;
+      }
+
+      .pfms-cat-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--pfms-ink);
+      }
+
+      .pfms-cat-track {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .pfms-cat-bar {
+        height: 14px;
+        min-width: 3px;
+        border-radius: 0 4px 4px 0;
+        background: var(--pfms-expense);
+        flex-shrink: 0;
+      }
+
+      .pfms-cat-value {
+        font-size: 13px;
+        color: var(--pfms-ink-secondary);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .pfms-recent-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--pfms-grid);
+        font-size: 14px;
+      }
+
+      .pfms-recent-item:last-child {
+        border-bottom: none;
+      }
+
+      .pfms-recent-type {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        color: var(--pfms-ink-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 86px;
+      }
+
+      .pfms-recent-main {
+        min-width: 0;
+      }
+
+      .pfms-recent-title {
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .pfms-recent-meta {
+        font-size: 12px;
+        color: var(--pfms-ink-secondary);
+      }
+
+      .pfms-recent-amount {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .pfms-dash-empty {
+        color: var(--pfms-ink-secondary);
+        font-size: 14px;
+        padding: 8px 0;
+      }
+
+      .pfms-dash-sources {
+        font-size: 12px;
+        color: var(--pfms-ink-secondary);
+        text-align: center;
+      }
+
+      @media (max-width: 700px) {
+        .pfms-kpi-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .pfms-kpi {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          align-items: baseline;
+          padding: 12px 14px;
+        }
+
+        .pfms-kpi-value {
+          font-size: 22px;
+          margin-top: 0;
+          text-align: right;
+        }
+
+        .pfms-kpi-sub {
+          grid-column: 1 / -1;
+          text-align: right;
+        }
+
+        .pfms-dash-grid {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+
+        .pfms-dash-toolbar {
+          justify-content: center;
+        }
+
+        .pfms-recent-type {
+          width: auto;
+        }
+
+        .pfms-dash-actions .pfms-btn-toolbar {
+          padding: 10px 16px;
+          font-size: 14px;
+        }
+
+        .pfms-dash-card {
+          padding: 14px 12px;
+        }
+
+        .pfms-dash-table {
+          font-size: 13px;
+        }
+
+        .pfms-dash-table th,
+        .pfms-dash-table td {
+          padding: 8px 4px;
+        }
+      }
+
       @media (hover: none) and (pointer: coarse) {
         .pfms-drop-desktop {
           display: none;
@@ -1246,13 +1722,79 @@
         </div>
       </section>
 
-      <section id="screen-dashboard" class="pfms-screen<?!= initialScreen === 'dashboard' ? ' pfms-active' : '' ?>">
-        <div class="pfms-panel">
-          <h2 class="pfms-panel-title">Dashboard</h2>
-          <p class="pfms-panel-text">Version 1 placeholder screen.</p>
-          <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
-            Back to Home
-          </button>
+      <section id="screen-dashboard" class="pfms-screen pfms-screen-form<?!= initialScreen === 'dashboard' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel pfms-panel-dashboard">
+          <h2 class="pfms-panel-title">DASHBOARD</h2>
+
+          <div class="pfms-dash-toolbar">
+            <div class="pfms-month-nav">
+              <button type="button" id="dash-prev" class="pfms-month-btn" aria-label="Previous month" onclick="shiftDashboardMonth(-1)">&#x2039;</button>
+              <span id="dash-month-label" class="pfms-month-label"></span>
+              <button type="button" id="dash-next" class="pfms-month-btn" aria-label="Next month" onclick="shiftDashboardMonth(1)">&#x203A;</button>
+            </div>
+            <div id="dash-currency-toggle" class="pfms-currency-toggle" role="radiogroup" aria-label="Currency"></div>
+            <div class="pfms-dash-actions">
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-refresh" onclick="refreshDashboard()">REFRESH</button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-back" onclick="showScreen('home')">HOME</button>
+            </div>
+          </div>
+
+          <div id="dash-status" class="pfms-dash-status">Loading&hellip;</div>
+
+          <div id="dash-body" class="pfms-hidden">
+            <div id="dash-other-currency" class="pfms-dash-note pfms-hidden"></div>
+
+            <div class="pfms-kpi-row">
+              <div class="pfms-kpi">
+                <div class="pfms-kpi-label"><span class="pfms-swatch pfms-swatch-income"></span>Income</div>
+                <div id="dash-kpi-income" class="pfms-kpi-value"></div>
+                <div id="dash-kpi-income-ytd" class="pfms-kpi-sub"></div>
+              </div>
+              <div class="pfms-kpi">
+                <div class="pfms-kpi-label"><span class="pfms-swatch pfms-swatch-expense"></span>Expenses</div>
+                <div id="dash-kpi-expense" class="pfms-kpi-value"></div>
+                <div id="dash-kpi-expense-ytd" class="pfms-kpi-sub"></div>
+              </div>
+              <div class="pfms-kpi">
+                <div class="pfms-kpi-label">Net</div>
+                <div id="dash-kpi-net" class="pfms-kpi-value"></div>
+                <div id="dash-kpi-net-ytd" class="pfms-kpi-sub"></div>
+              </div>
+            </div>
+
+            <div class="pfms-dash-card">
+              <div class="pfms-dash-card-head">
+                <h3 class="pfms-dash-card-title">Last 6 months</h3>
+                <div class="pfms-legend">
+                  <span><span class="pfms-swatch pfms-swatch-income"></span>Income</span>
+                  <span><span class="pfms-swatch pfms-swatch-expense"></span>Expenses</span>
+                </div>
+              </div>
+              <div id="dash-trend-chart" class="pfms-trend-chart"></div>
+              <div id="dash-trend-tooltip" class="pfms-chart-tooltip pfms-hidden" role="status"></div>
+              <button type="button" id="dash-trend-table-toggle" class="pfms-link-btn" onclick="toggleTrendTable()">Show as table</button>
+              <div id="dash-trend-table" class="pfms-hidden"></div>
+            </div>
+
+            <div class="pfms-dash-grid">
+              <div class="pfms-dash-card">
+                <h3 class="pfms-dash-card-title">By property</h3>
+                <div id="dash-by-property"></div>
+              </div>
+
+              <div class="pfms-dash-card">
+                <h3 class="pfms-dash-card-title">Expenses by category</h3>
+                <div id="dash-by-category"></div>
+              </div>
+            </div>
+
+            <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title">Recent payments</h3>
+              <div id="dash-recent"></div>
+            </div>
+
+            <div id="dash-sources" class="pfms-dash-sources"></div>
+          </div>
         </div>
       </section>
 
@@ -1329,6 +1871,10 @@
         if (screenId === 'companies') {
           showCompaniesList();
           loadCompaniesList();
+        }
+
+        if (screenId === 'dashboard') {
+          loadDashboard();
         }
       }
 
@@ -2400,6 +2946,461 @@
           .archiveCompany(selectedCompanyId);
       }
 
+      /* ---------- Dashboard ---------- */
+
+      var PFMS_CURRENCY_STORAGE_KEY = 'pfms.dashboardCurrency';
+      var PFMS_MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+      var dashboardCache = {};
+      var dashboardMonth = '';
+      var dashboardCurrency = '';
+      var dashboardData = null;
+      var dashboardRequestId = 0;
+      var dashboardResizeTimer = null;
+
+      function getCurrentMonthString() {
+        return getTodayDateString().substring(0, 7);
+      }
+
+      function formatMonthLabel(month, short) {
+        var index = parseInt(month.substring(5, 7), 10) - 1;
+        var name = PFMS_MONTH_NAMES[index] || month;
+        return short ? name.substring(0, 3) : name + ' ' + month.substring(0, 4);
+      }
+
+      function formatMoney(amount, currency, compact) {
+        var symbol = currency === 'USD' ? '$' : (currency === 'CRC' ? '₡' : '');
+        var negative = amount < 0;
+        var value = Math.abs(amount);
+        var text;
+
+        if (compact && value >= 1000000) {
+          text = (value / 1000000).toFixed(value >= 10000000 ? 0 : 1).replace(/\.0$/, '') + 'M';
+        } else if (compact && value >= 10000) {
+          text = Math.round(value / 1000) + 'K';
+        } else {
+          var decimals = currency === 'CRC' || compact ? 0 : 2;
+          text = value.toLocaleString('en-US', {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+          });
+        }
+
+        var body = symbol ? symbol + text : text + ' ' + currency;
+        return (negative ? '−' : '') + body;
+      }
+
+      function formatShortDate(isoDate) {
+        var parts = String(isoDate || '').split('-');
+        if (parts.length !== 3) {
+          return isoDate || '';
+        }
+        return PFMS_MONTH_NAMES[parseInt(parts[1], 10) - 1].substring(0, 3) + ' ' + parseInt(parts[2], 10);
+      }
+
+      function shiftMonth(month, delta) {
+        var year = parseInt(month.substring(0, 4), 10);
+        var index = parseInt(month.substring(5, 7), 10) - 1 + delta;
+        var d = new Date(year, index, 1);
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      }
+
+      function readSavedCurrency() {
+        try {
+          return window.localStorage.getItem(PFMS_CURRENCY_STORAGE_KEY) || '';
+        } catch (e) {
+          return '';
+        }
+      }
+
+      function setDashboardStatus(html) {
+        var status = document.getElementById('dash-status');
+        if (html) {
+          status.innerHTML = html;
+          status.classList.remove('pfms-hidden');
+        } else {
+          status.classList.add('pfms-hidden');
+        }
+      }
+
+      function updateMonthNav() {
+        document.getElementById('dash-month-label').textContent = formatMonthLabel(dashboardMonth);
+        document.getElementById('dash-next').disabled = dashboardMonth >= getCurrentMonthString();
+      }
+
+      function loadDashboard() {
+        if (!dashboardMonth) {
+          dashboardMonth = getCurrentMonthString();
+        }
+        updateMonthNav();
+
+        if (dashboardCache[dashboardMonth]) {
+          renderDashboard(dashboardCache[dashboardMonth]);
+          return;
+        }
+
+        var requestId = ++dashboardRequestId;
+        var month = dashboardMonth;
+        setDashboardStatus('Loading&hellip;');
+        document.getElementById('dash-body').classList.add('pfms-hidden');
+
+        runServer('getDashboardData', { month: month })
+          .then(function (data) {
+            dashboardCache[month] = data;
+            if (requestId === dashboardRequestId) {
+              renderDashboard(data);
+            }
+          })
+          .catch(function (error) {
+            console.error(error);
+            if (requestId === dashboardRequestId) {
+              setDashboardStatus('Could not load the dashboard: ' + escapeHtml(getErrorMessage(error)) +
+                '<br><button type="button" class="pfms-link-btn" onclick="refreshDashboard()">Try again</button>');
+            }
+          });
+      }
+
+      function shiftDashboardMonth(delta) {
+        var next = shiftMonth(dashboardMonth || getCurrentMonthString(), delta);
+        if (next > getCurrentMonthString()) {
+          return;
+        }
+        dashboardMonth = next;
+        loadDashboard();
+      }
+
+      function refreshDashboard() {
+        dashboardCache = {};
+        loadDashboard();
+      }
+
+      function chooseDashboardCurrency(data) {
+        var available = data.currencies || [];
+        if (available.indexOf(dashboardCurrency) !== -1) {
+          return dashboardCurrency;
+        }
+        var saved = readSavedCurrency();
+        if (available.indexOf(saved) !== -1) {
+          return saved;
+        }
+        if (available.indexOf('USD') !== -1) {
+          return 'USD';
+        }
+        return available[0] || 'USD';
+      }
+
+      function selectDashboardCurrency(currency) {
+        dashboardCurrency = currency;
+        try {
+          window.localStorage.setItem(PFMS_CURRENCY_STORAGE_KEY, currency);
+        } catch (e) {
+          // Not remembered; harmless.
+        }
+        if (dashboardData) {
+          renderDashboard(dashboardData);
+        }
+      }
+
+      function renderCurrencyToggle(currencies) {
+        var toggle = document.getElementById('dash-currency-toggle');
+        toggle.innerHTML = '';
+        toggle.classList.toggle('pfms-hidden', currencies.length < 2);
+
+        currencies.forEach(function (currency) {
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = currency;
+          button.setAttribute('role', 'radio');
+          button.setAttribute('aria-checked', currency === dashboardCurrency ? 'true' : 'false');
+          if (currency === dashboardCurrency) {
+            button.className = 'pfms-selected';
+          }
+          button.onclick = function () {
+            selectDashboardCurrency(currency);
+          };
+          toggle.appendChild(button);
+        });
+      }
+
+      function renderDashboardSetupHelp(data) {
+        var html = 'No income or expense sheets were found in the PFMS spreadsheet.';
+        if (data.skippedSheets && data.skippedSheets.length) {
+          html += '<br>Skipped tabs:<ul>' + data.skippedSheets.map(function (s) {
+            return '<li><strong>' + escapeHtml(s.sheet) + '</strong>: ' + escapeHtml(s.reason) + '</li>';
+          }).join('') + '</ul>';
+        }
+        html += '<br>In Apps Script, add the Script Properties <strong>PFMS_INCOME_SHEETS</strong> and ' +
+          '<strong>PFMS_EXPENSE_SHEETS</strong> with the tab names.';
+        setDashboardStatus(html);
+      }
+
+      function renderDashboard(data) {
+        dashboardData = data;
+
+        if (!data.sources || !data.sources.length) {
+          document.getElementById('dash-body').classList.add('pfms-hidden');
+          renderCurrencyToggle([]);
+          renderDashboardSetupHelp(data);
+          return;
+        }
+
+        dashboardCurrency = chooseDashboardCurrency(data);
+        var currency = dashboardCurrency;
+        renderCurrencyToggle(data.currencies || []);
+        setDashboardStatus('');
+        document.getElementById('dash-body').classList.remove('pfms-hidden');
+
+        var totals = (data.totals && data.totals[currency]) || { income: 0, expense: 0, count: 0 };
+        var ytd = (data.yearToDate && data.yearToDate[currency]) || { income: 0, expense: 0 };
+        var year = data.month.substring(0, 4);
+
+        document.getElementById('dash-kpi-income').textContent = formatMoney(totals.income, currency);
+        document.getElementById('dash-kpi-expense').textContent = formatMoney(totals.expense, currency);
+        document.getElementById('dash-kpi-net').textContent = formatMoney(totals.income - totals.expense, currency);
+        document.getElementById('dash-kpi-income-ytd').textContent = year + ' so far: ' + formatMoney(ytd.income, currency);
+        document.getElementById('dash-kpi-expense-ytd').textContent = year + ' so far: ' + formatMoney(ytd.expense, currency);
+        document.getElementById('dash-kpi-net-ytd').textContent = year + ' so far: ' + formatMoney(ytd.income - ytd.expense, currency);
+
+        renderOtherCurrencyNote(data, currency);
+        renderTrendChart(data, currency);
+        renderTrendTable(data, currency);
+        renderPropertyTable(data, currency);
+        renderCategoryBars(data, currency);
+        renderRecentPayments(data);
+
+        document.getElementById('dash-sources').textContent = 'Reading from: ' + data.sources.map(function (s) {
+          return s.sheet + ' (' + (s.type === 'income' ? 'income' : 'expenses') + ')';
+        }).join(', ');
+      }
+
+      function renderOtherCurrencyNote(data, currency) {
+        var note = document.getElementById('dash-other-currency');
+        var others = (data.currencies || []).filter(function (c) {
+          var t = data.totals[c];
+          return c !== currency && t && t.count > 0;
+        });
+
+        if (!others.length) {
+          note.classList.add('pfms-hidden');
+          return;
+        }
+
+        note.textContent = others.map(function (c) {
+          var t = data.totals[c];
+          return c + ' this month: ' + formatMoney(t.income, c) + ' in, ' + formatMoney(t.expense, c) + ' out';
+        }).join(' · ') + '. Switch currency above to see details.';
+        note.classList.remove('pfms-hidden');
+      }
+
+      function getNiceScale(maxValue, tickCount) {
+        if (maxValue <= 0) {
+          return { max: 1, step: 1 };
+        }
+        var rough = maxValue / tickCount;
+        var magnitude = Math.pow(10, Math.floor(Math.log10(rough)));
+        var residual = rough / magnitude;
+        var nice = residual > 5 ? 10 : residual > 2 ? 5 : residual > 1 ? 2 : 1;
+        var step = nice * magnitude;
+        return { max: Math.ceil(maxValue / step) * step, step: step };
+      }
+
+      // Column with a 4px rounded top and a square base.
+      function columnPath(x, y, width, height) {
+        if (height <= 0) {
+          return '';
+        }
+        var r = Math.min(4, width / 2, height);
+        return 'M' + x + ',' + (y + height) +
+          'V' + (y + r) +
+          'Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
+          'H' + (x + width - r) +
+          'Q' + (x + width) + ',' + y + ' ' + (x + width) + ',' + (y + r) +
+          'V' + (y + height) + 'Z';
+      }
+
+      function renderTrendChart(data, currency) {
+        var container = document.getElementById('dash-trend-chart');
+        var tooltip = document.getElementById('dash-trend-tooltip');
+        var points = (data.trend && data.trend[currency]) || [];
+        tooltip.classList.add('pfms-hidden');
+
+        var width = Math.max(280, container.clientWidth || 600);
+        var height = 220;
+        var margin = { top: 12, right: 8, bottom: 28, left: 52 };
+        var plotWidth = width - margin.left - margin.right;
+        var plotHeight = height - margin.top - margin.bottom;
+
+        var maxValue = 0;
+        points.forEach(function (p) {
+          maxValue = Math.max(maxValue, p.income, p.expense);
+        });
+        var scale = getNiceScale(maxValue, 4);
+        var y = function (v) {
+          return margin.top + plotHeight - (v / scale.max) * plotHeight;
+        };
+
+        var band = plotWidth / Math.max(points.length, 1);
+        var barWidth = Math.min(24, Math.max(6, (band - 16) / 2 - 1));
+        var gap = 2;
+
+        var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" height="' + height + '" role="img" ' +
+          'aria-label="Income and expenses for the last ' + points.length + ' months in ' + currency + '">';
+
+        for (var v = 0; v <= scale.max + scale.step / 2; v += scale.step) {
+          var gy = Math.round(y(v)) + 0.5;
+          svg += '<line x1="' + margin.left + '" x2="' + (width - margin.right) + '" y1="' + gy + '" y2="' + gy +
+            '" stroke="var(--pfms-grid)" stroke-width="1"/>';
+          svg += '<text x="' + (margin.left - 8) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="11" ' +
+            'fill="var(--pfms-ink-secondary)">' + escapeHtml(formatMoney(v, currency, true)) + '</text>';
+        }
+
+        points.forEach(function (p, i) {
+          var center = margin.left + band * i + band / 2;
+          var incomeX = center - gap / 2 - barWidth;
+          var expenseX = center + gap / 2;
+          svg += '<path d="' + columnPath(incomeX, y(p.income), barWidth, y(0) - y(p.income)) + '" fill="var(--pfms-income)"/>';
+          svg += '<path d="' + columnPath(expenseX, y(p.expense), barWidth, y(0) - y(p.expense)) + '" fill="var(--pfms-expense)"/>';
+          svg += '<text x="' + center + '" y="' + (height - 8) + '" text-anchor="middle" font-size="12" ' +
+            'fill="var(--pfms-ink-secondary)"' + (p.month === data.month ? ' font-weight="700"' : '') + '>' +
+            formatMonthLabel(p.month, true) + '</text>';
+          svg += '<rect class="pfms-trend-hit" data-index="' + i + '" x="' + (margin.left + band * i) + '" y="' + margin.top +
+            '" width="' + band + '" height="' + plotHeight + '" fill="transparent" style="cursor:pointer"/>';
+        });
+
+        svg += '</svg>';
+        container.innerHTML = svg;
+
+        var hits = container.querySelectorAll('.pfms-trend-hit');
+        var showTip = function (event) {
+          var index = parseInt(this.getAttribute('data-index'), 10);
+          var p = points[index];
+          tooltip.innerHTML =
+            '<div class="pfms-chart-tooltip-title">' + formatMonthLabel(p.month) + '</div>' +
+            '<div class="pfms-chart-tooltip-row"><span><span class="pfms-swatch pfms-swatch-income"></span>Income</span><span>' + formatMoney(p.income, currency) + '</span></div>' +
+            '<div class="pfms-chart-tooltip-row"><span><span class="pfms-swatch pfms-swatch-expense"></span>Expenses</span><span>' + formatMoney(p.expense, currency) + '</span></div>' +
+            '<div class="pfms-chart-tooltip-row"><span>Net</span><span>' + formatMoney(p.income - p.expense, currency) + '</span></div>';
+          tooltip.classList.remove('pfms-hidden');
+
+          var card = container.parentNode.getBoundingClientRect();
+          var rect = this.getBoundingClientRect();
+          var left = rect.left - card.left + rect.width / 2 - tooltip.offsetWidth / 2;
+          left = Math.max(8, Math.min(left, card.width - tooltip.offsetWidth - 8));
+          tooltip.style.left = left + 'px';
+          tooltip.style.top = (container.offsetTop + 4) + 'px';
+
+          for (var h = 0; h < hits.length; h++) {
+            hits[h].setAttribute('fill', h === index ? 'rgba(27, 67, 50, 0.06)' : 'transparent');
+          }
+        };
+        var hideTip = function () {
+          tooltip.classList.add('pfms-hidden');
+          for (var h = 0; h < hits.length; h++) {
+            hits[h].setAttribute('fill', 'transparent');
+          }
+        };
+        for (var h = 0; h < hits.length; h++) {
+          hits[h].addEventListener('pointerenter', function (event) {
+            if (event.pointerType === 'mouse') {
+              showTip.call(this, event);
+            }
+          });
+          hits[h].addEventListener('click', showTip);
+        }
+        // Mouse: hide on leaving the chart. Touch: hide on a tap elsewhere.
+        container.onpointerleave = function (event) {
+          if (event.pointerType === 'mouse') {
+            hideTip();
+          }
+        };
+        hideTrendTooltip = hideTip;
+      }
+
+      var hideTrendTooltip = function () {};
+
+      document.addEventListener('click', function (event) {
+        var chart = document.getElementById('dash-trend-chart');
+        if (chart && !chart.contains(event.target)) {
+          hideTrendTooltip();
+        }
+      });
+
+      function renderTrendTable(data, currency) {
+        var points = (data.trend && data.trend[currency]) || [];
+        var rows = points.map(function (p) {
+          return '<tr><td>' + formatMonthLabel(p.month) + '</td><td>' + formatMoney(p.income, currency) +
+            '</td><td>' + formatMoney(p.expense, currency) + '</td><td>' + formatMoney(p.income - p.expense, currency) + '</td></tr>';
+        }).join('');
+        document.getElementById('dash-trend-table').innerHTML =
+          '<div class="pfms-dash-table-wrap"><table class="pfms-dash-table"><thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead><tbody>' +
+          rows + '</tbody></table></div>';
+      }
+
+      function toggleTrendTable() {
+        var table = document.getElementById('dash-trend-table');
+        var hidden = table.classList.toggle('pfms-hidden');
+        document.getElementById('dash-trend-table-toggle').textContent = hidden ? 'Show as table' : 'Hide table';
+      }
+
+      function renderPropertyTable(data, currency) {
+        var container = document.getElementById('dash-by-property');
+        var rows = (data.byProperty && data.byProperty[currency]) || [];
+        if (!rows.length) {
+          container.innerHTML = '<div class="pfms-dash-empty">No payments this month.</div>';
+          return;
+        }
+        container.innerHTML = '<div class="pfms-dash-table-wrap"><table class="pfms-dash-table"><thead><tr><th>Property</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead><tbody>' +
+          rows.map(function (r) {
+            return '<tr><td>' + escapeHtml(r.property) + '</td><td>' + formatMoney(r.income, currency) + '</td><td>' +
+              formatMoney(r.expense, currency) + '</td><td><strong>' + formatMoney(r.net, currency) + '</strong></td></tr>';
+          }).join('') + '</tbody></table></div>';
+      }
+
+      function renderCategoryBars(data, currency) {
+        var container = document.getElementById('dash-by-category');
+        var rows = (data.byCategory && data.byCategory[currency]) || [];
+        if (!rows.length) {
+          container.innerHTML = '<div class="pfms-dash-empty">No expenses this month.</div>';
+          return;
+        }
+        var maxAmount = rows[0].amount || 1;
+        container.innerHTML = rows.map(function (r) {
+          var percent = Math.max(1, Math.round((r.amount / maxAmount) * 55));
+          return '<div class="pfms-cat-row" title="' + escapeHtml(r.category) + ': ' + escapeHtml(formatMoney(r.amount, currency)) + '">' +
+            '<span class="pfms-cat-name">' + escapeHtml(r.category) + '</span>' +
+            '<span class="pfms-cat-track"><span class="pfms-cat-bar" style="width:' + percent + '%"></span>' +
+            '<span class="pfms-cat-value">' + formatMoney(r.amount, currency) + '</span></span></div>';
+        }).join('');
+      }
+
+      function renderRecentPayments(data) {
+        var container = document.getElementById('dash-recent');
+        var items = data.recent || [];
+        if (!items.length) {
+          container.innerHTML = '<div class="pfms-dash-empty">No payments yet.</div>';
+          return;
+        }
+        container.innerHTML = items.map(function (t) {
+          var isIncome = t.type === 'income';
+          var meta = [formatShortDate(t.date), t.category, t.enteredBy].filter(Boolean).map(escapeHtml).join(' · ');
+          return '<div class="pfms-recent-item">' +
+            '<span class="pfms-recent-type"><span class="pfms-swatch ' + (isIncome ? 'pfms-swatch-income' : 'pfms-swatch-expense') + '"></span>' +
+            (isIncome ? 'Income' : 'Expense') + '</span>' +
+            '<span class="pfms-recent-main"><div class="pfms-recent-title">' + escapeHtml(t.property || 'No property') + '</div>' +
+            '<div class="pfms-recent-meta">' + meta + '</div></span>' +
+            '<span class="pfms-recent-amount">' + (isIncome ? '+' : '−') + formatMoney(t.amount, t.currency) + '</span></div>';
+        }).join('');
+      }
+
+      window.addEventListener('resize', function () {
+        clearTimeout(dashboardResizeTimer);
+        dashboardResizeTimer = setTimeout(function () {
+          var screen = document.getElementById('screen-dashboard');
+          if (dashboardData && screen.classList.contains('pfms-active') && dashboardData.sources && dashboardData.sources.length) {
+            renderTrendChart(dashboardData, dashboardCurrency);
+          }
+        }, 150);
+      });
+
       /* ---------- Entered by ---------- */
 
       // Shown until the PFMS_PEOPLE Script Property is set (see People.gs).
@@ -2923,6 +3924,7 @@
             setAttachmentsBusy(prefix, false);
             options.setButtonState(false);
             clearAttachments(prefix);
+            dashboardCache = {};
             renderSuccessAttachments(prefix, savedAttachments, logFailed);
             options.onSuccess(payment);
           })
