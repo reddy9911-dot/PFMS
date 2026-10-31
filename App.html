@@ -478,6 +478,198 @@
         grid-column: 1 / -1;
       }
 
+      .pfms-dropzone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 120px;
+        padding: 20px 16px;
+        border: 2px dashed #9bb5a8;
+        border-radius: 12px;
+        background: #f6faf7;
+        color: #1b4332;
+        text-align: center;
+        cursor: pointer;
+        transition: background 0.12s ease, border-color 0.12s ease;
+      }
+
+      .pfms-dropzone:hover,
+      .pfms-dropzone:focus-within {
+        border-color: #2d6a4f;
+        background: #eaf4ee;
+      }
+
+      .pfms-dropzone.pfms-dragover {
+        border-color: #2d6a4f;
+        border-style: solid;
+        background: #d8eee0;
+      }
+
+      .pfms-dropzone.pfms-disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .pfms-dropzone-icon {
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .pfms-dropzone-text {
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .pfms-dropzone-hint {
+        font-size: 12px;
+        color: #5f6368;
+      }
+
+      .pfms-drop-touch {
+        display: none;
+      }
+
+      .pfms-file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .pfms-attachment-list {
+        list-style: none;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .pfms-attachment-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid #d0d7de;
+        border-radius: 10px;
+        background: #ffffff;
+        font-size: 14px;
+      }
+
+      .pfms-attachment-thumb {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        background: #eef1f4;
+        object-fit: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #5f6368;
+      }
+
+      .pfms-attachment-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .pfms-attachment-name {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .pfms-attachment-meta {
+        font-size: 12px;
+        color: #5f6368;
+      }
+
+      .pfms-attachment-remove {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        background: #f1f3f4;
+        color: #c1121f;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .pfms-attachment-remove:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .pfms-success-value a {
+        color: #1d4e89;
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        .pfms-drop-desktop {
+          display: none;
+        }
+
+        .pfms-drop-touch {
+          display: inline;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .pfms-header {
+          padding: 18px 16px;
+          font-size: 17px;
+        }
+
+        .pfms-screen {
+          padding: 16px;
+        }
+
+        .pfms-panel {
+          padding: 24px 16px;
+        }
+
+        .pfms-panel-title,
+        .pfms-success-title {
+          font-size: 22px;
+        }
+
+        .pfms-btn {
+          padding: 20px 16px;
+          font-size: 18px;
+        }
+
+        .pfms-form-layout,
+        .pfms-properties-form-grid {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+
+        .pfms-property-scroll {
+          max-height: 220px;
+        }
+
+        .pfms-form-control {
+          font-size: 16px;
+        }
+
+        .pfms-form-actions {
+          position: sticky;
+          bottom: 0;
+          background: #ffffff;
+          padding: 12px 0 4px;
+          margin-top: 12px;
+        }
+      }
+
       .pfms-footer {
         background: #1b4332;
         color: #ffffff;
@@ -591,6 +783,22 @@
                     <textarea id="receive-notes" class="pfms-form-control" rows="4"></textarea>
                   </div>
 
+                  <div class="pfms-form-group">
+                    <span class="pfms-form-label">Invoices / Facturas</span>
+                    <label id="receive-dropzone" class="pfms-dropzone" for="receive-file-input">
+                      <span class="pfms-dropzone-icon">&#x1F4CE;</span>
+                      <span class="pfms-dropzone-text pfms-drop-desktop">Drag invoices here, paste, or <u>browse</u></span>
+                      <span class="pfms-dropzone-text pfms-drop-touch">Tap to take a photo or choose a file</span>
+                      <span class="pfms-dropzone-hint">PDF, XML, photos, Word or Excel &middot; up to 20 MB each</span>
+                    </label>
+                    <input type="file" id="receive-file-input" class="pfms-file-input" multiple
+                      accept="image/*,application/pdf,.pdf,.xml,text/xml,application/xml,.doc,.docx,.xls,.xlsx,.csv">
+                    <ul id="receive-attachment-list" class="pfms-attachment-list"></ul>
+                    <div id="receive-attachment-error" class="pfms-form-error pfms-hidden"></div>
+                  </div>
+
+                  <div id="receive-save-error" class="pfms-form-error pfms-hidden"></div>
+
                   <div class="pfms-form-actions">
                     <button type="button" id="receive-save-btn" class="pfms-btn pfms-btn-save" onclick="saveReceivePayment()">
                       SAVE PAYMENT
@@ -622,6 +830,10 @@
               <div class="pfms-success-row">
                 <span class="pfms-success-label">Date</span>
                 <span id="receive-success-date" class="pfms-success-value"></span>
+              </div>
+              <div id="receive-success-attachments-row" class="pfms-success-row pfms-hidden">
+                <span class="pfms-success-label">Invoices</span>
+                <span id="receive-success-attachments" class="pfms-success-value"></span>
               </div>
             </div>
             <div class="pfms-success-actions">
@@ -694,6 +906,22 @@
                     <textarea id="make-notes" class="pfms-form-control" rows="4"></textarea>
                   </div>
 
+                  <div class="pfms-form-group">
+                    <span class="pfms-form-label">Invoices / Facturas</span>
+                    <label id="make-dropzone" class="pfms-dropzone" for="make-file-input">
+                      <span class="pfms-dropzone-icon">&#x1F4CE;</span>
+                      <span class="pfms-dropzone-text pfms-drop-desktop">Drag invoices here, paste, or <u>browse</u></span>
+                      <span class="pfms-dropzone-text pfms-drop-touch">Tap to take a photo or choose a file</span>
+                      <span class="pfms-dropzone-hint">PDF, XML, photos, Word or Excel &middot; up to 20 MB each</span>
+                    </label>
+                    <input type="file" id="make-file-input" class="pfms-file-input" multiple
+                      accept="image/*,application/pdf,.pdf,.xml,text/xml,application/xml,.doc,.docx,.xls,.xlsx,.csv">
+                    <ul id="make-attachment-list" class="pfms-attachment-list"></ul>
+                    <div id="make-attachment-error" class="pfms-form-error pfms-hidden"></div>
+                  </div>
+
+                  <div id="make-save-error" class="pfms-form-error pfms-hidden"></div>
+
                   <div class="pfms-form-actions">
                     <button type="button" id="make-save-btn" class="pfms-btn pfms-btn-save" onclick="saveMakePayment()">
                       SAVE PAYMENT
@@ -725,6 +953,10 @@
               <div class="pfms-success-row">
                 <span class="pfms-success-label">Date</span>
                 <span id="make-success-date" class="pfms-success-value"></span>
+              </div>
+              <div id="make-success-attachments-row" class="pfms-success-row pfms-hidden">
+                <span class="pfms-success-label">Invoices</span>
+                <span id="make-success-attachments" class="pfms-success-value"></span>
               </div>
             </div>
             <div class="pfms-success-actions">
@@ -1081,10 +1313,10 @@
         }
       }
 
-      function setReceiveSaveButtonState(isSaving) {
+      function setReceiveSaveButtonState(isSaving, label) {
         var saveButton = document.getElementById('receive-save-btn');
         saveButton.disabled = isSaving;
-        saveButton.textContent = isSaving ? 'Saving...' : 'SAVE PAYMENT';
+        saveButton.textContent = isSaving ? (label || 'Saving...') : 'SAVE PAYMENT';
       }
 
       function updateSelectedPropertyDisplay() {
@@ -1110,6 +1342,8 @@
         hideReceiveValidationErrors();
         updateSelectedPropertyDisplay();
         setReceiveSaveButtonState(false);
+        clearAttachments('receive');
+        showSaveError('receive', '');
 
         var buttons = document.querySelectorAll('#receive-property-grid .pfms-property-btn');
         for (var i = 0; i < buttons.length; i++) {
@@ -1238,21 +1472,22 @@
           notes: document.getElementById('receive-notes').value
         };
 
-        setReceiveSaveButtonState(true);
-
-        google.script.run
-          .withSuccessHandler(function () {
-            setReceiveSaveButtonState(false);
-            showReceivePaymentSuccess(payment);
-          })
-          .withFailureHandler(function (error) {
-            setReceiveSaveButtonState(false);
-            console.error(error);
-          })
-          .saveReceivePayment(payment);
+        savePaymentWithAttachments({
+          prefix: 'receive',
+          paymentType: 'Income',
+          payment: payment,
+          serverFunction: 'saveReceivePayment',
+          setButtonState: setReceiveSaveButtonState,
+          onSuccess: showReceivePaymentSuccess
+        });
       }
 
       function cancelReceivePayment() {
+        if (attachmentsBusy.receive) {
+          return;
+        }
+        clearAttachments('receive');
+        showSaveError('receive', '');
         showScreen('home');
       }
 
@@ -1277,10 +1512,10 @@
         }
       }
 
-      function setMakeSaveButtonState(isSaving) {
+      function setMakeSaveButtonState(isSaving, label) {
         var saveButton = document.getElementById('make-save-btn');
         saveButton.disabled = isSaving;
-        saveButton.textContent = isSaving ? 'Saving...' : 'SAVE PAYMENT';
+        saveButton.textContent = isSaving ? (label || 'Saving...') : 'SAVE PAYMENT';
       }
 
       function updateMakeSelectedPropertyDisplay() {
@@ -1306,6 +1541,8 @@
         hideMakeValidationErrors();
         updateMakeSelectedPropertyDisplay();
         setMakeSaveButtonState(false);
+        clearAttachments('make');
+        showSaveError('make', '');
 
         var buttons = document.querySelectorAll('#make-property-grid .pfms-property-btn');
         for (var i = 0; i < buttons.length; i++) {
@@ -1458,21 +1695,22 @@
           notes: document.getElementById('make-notes').value
         };
 
-        setMakeSaveButtonState(true);
-
-        google.script.run
-          .withSuccessHandler(function () {
-            setMakeSaveButtonState(false);
-            showMakePaymentSuccess(payment);
-          })
-          .withFailureHandler(function (error) {
-            setMakeSaveButtonState(false);
-            console.error(error);
-          })
-          .saveMakePayment(payment);
+        savePaymentWithAttachments({
+          prefix: 'make',
+          paymentType: 'Expense',
+          payment: payment,
+          serverFunction: 'saveMakePayment',
+          setButtonState: setMakeSaveButtonState,
+          onSuccess: showMakePaymentSuccess
+        });
       }
 
       function cancelMakePayment() {
+        if (attachmentsBusy.make) {
+          return;
+        }
+        clearAttachments('make');
+        showSaveError('make', '');
         showScreen('home');
       }
 
@@ -2095,8 +2333,468 @@
           .archiveCompany(selectedCompanyId);
       }
 
+      /* ---------- Invoice / factura attachments ---------- */
+
+      var PFMS_MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
+      var PFMS_MAX_ATTACHMENTS = 10;
+      var PFMS_IMAGE_MAX_DIMENSION = 2000;
+      var PFMS_IMAGE_COMPRESS_THRESHOLD = 1.5 * 1024 * 1024;
+      var pendingAttachments = { receive: [], make: [] };
+      var attachmentsBusy = { receive: false, make: false };
+
+      function runServer(functionName) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        return new Promise(function (resolve, reject) {
+          var runner = google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject);
+          runner[functionName].apply(runner, args);
+        });
+      }
+
+      function getErrorMessage(error) {
+        if (!error) {
+          return 'Something went wrong. Please try again.';
+        }
+        return error.message || String(error);
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes < 1024) {
+          return bytes + ' B';
+        }
+        if (bytes < 1024 * 1024) {
+          return Math.round(bytes / 1024) + ' KB';
+        }
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+
+      function getFileExtension(name) {
+        var match = /\.([a-z0-9]+)$/i.exec(name || '');
+        return match ? match[1].toUpperCase() : 'FILE';
+      }
+
+      function showAttachmentError(prefix, message) {
+        var errorEl = document.getElementById(prefix + '-attachment-error');
+        if (message) {
+          errorEl.textContent = message;
+          errorEl.classList.remove('pfms-hidden');
+        } else {
+          errorEl.textContent = '';
+          errorEl.classList.add('pfms-hidden');
+        }
+      }
+
+      function showSaveError(prefix, message) {
+        var errorEl = document.getElementById(prefix + '-save-error');
+        if (message) {
+          errorEl.textContent = message;
+          errorEl.classList.remove('pfms-hidden');
+        } else {
+          errorEl.textContent = '';
+          errorEl.classList.add('pfms-hidden');
+        }
+      }
+
+      function addAttachmentFiles(prefix, fileList) {
+        if (attachmentsBusy[prefix] || !fileList || !fileList.length) {
+          return;
+        }
+
+        var list = pendingAttachments[prefix];
+        var problems = [];
+
+        for (var i = 0; i < fileList.length; i++) {
+          var file = fileList[i];
+
+          if (list.length >= PFMS_MAX_ATTACHMENTS) {
+            problems.push('You can attach up to ' + PFMS_MAX_ATTACHMENTS + ' files per payment.');
+            break;
+          }
+
+          if (file.size > PFMS_MAX_ATTACHMENT_BYTES) {
+            problems.push(file.name + ' is larger than 20 MB.');
+            continue;
+          }
+
+          if (file.size === 0) {
+            problems.push(file.name + ' is empty.');
+            continue;
+          }
+
+          var isDuplicate = list.some(function (entry) {
+            return entry.file.name === file.name &&
+              entry.file.size === file.size &&
+              entry.file.lastModified === file.lastModified;
+          });
+          if (isDuplicate) {
+            continue;
+          }
+
+          list.push({
+            file: file,
+            previewUrl: /^image\//.test(file.type) ? URL.createObjectURL(file) : '',
+            uploaded: null
+          });
+        }
+
+        showAttachmentError(prefix, problems.join(' '));
+        renderAttachmentList(prefix);
+      }
+
+      function removeAttachment(prefix, index) {
+        if (attachmentsBusy[prefix]) {
+          return;
+        }
+        var removed = pendingAttachments[prefix].splice(index, 1)[0];
+        if (removed && removed.previewUrl) {
+          URL.revokeObjectURL(removed.previewUrl);
+        }
+        showAttachmentError(prefix, '');
+        renderAttachmentList(prefix);
+      }
+
+      function clearAttachments(prefix) {
+        pendingAttachments[prefix].forEach(function (entry) {
+          if (entry.previewUrl) {
+            URL.revokeObjectURL(entry.previewUrl);
+          }
+        });
+        pendingAttachments[prefix] = [];
+        showAttachmentError(prefix, '');
+        renderAttachmentList(prefix);
+      }
+
+      function renderAttachmentList(prefix) {
+        var listEl = document.getElementById(prefix + '-attachment-list');
+        listEl.innerHTML = '';
+
+        pendingAttachments[prefix].forEach(function (entry, index) {
+          var item = document.createElement('li');
+          item.className = 'pfms-attachment-item';
+
+          var thumb;
+          if (entry.previewUrl) {
+            thumb = document.createElement('img');
+            thumb.src = entry.previewUrl;
+            thumb.alt = '';
+          } else {
+            thumb = document.createElement('span');
+            thumb.textContent = getFileExtension(entry.file.name);
+          }
+          thumb.className = 'pfms-attachment-thumb';
+
+          var info = document.createElement('div');
+          info.className = 'pfms-attachment-info';
+
+          var name = document.createElement('div');
+          name.className = 'pfms-attachment-name';
+          name.textContent = entry.file.name;
+
+          var meta = document.createElement('div');
+          meta.className = 'pfms-attachment-meta';
+          meta.textContent = formatFileSize(entry.file.size) + (entry.uploaded ? ' · uploaded' : '');
+
+          info.appendChild(name);
+          info.appendChild(meta);
+
+          var removeButton = document.createElement('button');
+          removeButton.type = 'button';
+          removeButton.className = 'pfms-attachment-remove';
+          removeButton.setAttribute('aria-label', 'Remove ' + entry.file.name);
+          removeButton.innerHTML = '&times;';
+          removeButton.disabled = attachmentsBusy[prefix];
+          removeButton.onclick = function () {
+            removeAttachment(prefix, index);
+          };
+
+          item.appendChild(thumb);
+          item.appendChild(info);
+          item.appendChild(removeButton);
+          listEl.appendChild(item);
+        });
+      }
+
+      function setAttachmentsBusy(prefix, isBusy) {
+        attachmentsBusy[prefix] = isBusy;
+        document.getElementById(prefix + '-file-input').disabled = isBusy;
+        document.getElementById(prefix + '-dropzone').classList.toggle('pfms-disabled', isBusy);
+        renderAttachmentList(prefix);
+      }
+
+      function readBlobAsBase64(blob) {
+        return new Promise(function (resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function () {
+            var result = String(reader.result || '');
+            resolve(result.substring(result.indexOf(',') + 1));
+          };
+          reader.onerror = function () {
+            reject(new Error('Could not read the file.'));
+          };
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      // Large phone photos are shrunk before upload so saving stays quick.
+      // Anything the browser cannot decode is sent unchanged.
+      function compressImageIfLarge(file) {
+        var canCompress = /^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type);
+        if (!canCompress || file.size < PFMS_IMAGE_COMPRESS_THRESHOLD) {
+          return Promise.resolve({ blob: file, name: file.name, mimeType: file.type });
+        }
+
+        return new Promise(function (resolve) {
+          var url = URL.createObjectURL(file);
+          var img = new Image();
+          var keepOriginal = function () {
+            URL.revokeObjectURL(url);
+            resolve({ blob: file, name: file.name, mimeType: file.type });
+          };
+
+          img.onload = function () {
+            var scale = Math.min(1, PFMS_IMAGE_MAX_DIMENSION / Math.max(img.width, img.height));
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(function (blob) {
+              if (!blob || blob.size >= file.size) {
+                keepOriginal();
+                return;
+              }
+              URL.revokeObjectURL(url);
+              resolve({
+                blob: blob,
+                name: file.name.replace(/\.[^.]+$/, '') + '.jpg',
+                mimeType: 'image/jpeg'
+              });
+            }, 'image/jpeg', 0.85);
+          };
+          img.onerror = keepOriginal;
+          img.src = url;
+        });
+      }
+
+      function uploadOneAttachment(entry, meta) {
+        if (entry.uploaded) {
+          return Promise.resolve(entry.uploaded);
+        }
+
+        return compressImageIfLarge(entry.file).then(function (prepared) {
+          return readBlobAsBase64(prepared.blob).then(function (base64) {
+            return runServer('uploadPaymentAttachment', {
+              name: prepared.name,
+              mimeType: prepared.mimeType || 'application/octet-stream',
+              base64: base64
+            }, meta);
+          });
+        }).then(function (result) {
+          entry.uploaded = result;
+          return result;
+        });
+      }
+
+      // Uploads one file at a time so progress is clear and a retry
+      // skips files that already made it to Drive.
+      function uploadPendingAttachments(prefix, meta, onProgress) {
+        var entries = pendingAttachments[prefix].slice();
+        var results = [];
+
+        return entries.reduce(function (chain, entry, index) {
+          return chain.then(function () {
+            onProgress(index + 1, entries.length);
+            return uploadOneAttachment(entry, meta).then(function (result) {
+              results.push(result);
+              renderAttachmentList(prefix);
+            });
+          });
+        }, Promise.resolve()).then(function () {
+          return results;
+        });
+      }
+
+      function getActivePaymentPrefix() {
+        if (document.getElementById('screen-receive-payment').classList.contains('pfms-active') &&
+            !document.getElementById('receive-payment-form-view').classList.contains('pfms-hidden')) {
+          return 'receive';
+        }
+        if (document.getElementById('screen-make-payment').classList.contains('pfms-active') &&
+            !document.getElementById('make-payment-form-view').classList.contains('pfms-hidden')) {
+          return 'make';
+        }
+        return '';
+      }
+
+      function initAttachmentDropzone(prefix) {
+        var dropzone = document.getElementById(prefix + '-dropzone');
+        var input = document.getElementById(prefix + '-file-input');
+        var dragDepth = 0;
+
+        input.addEventListener('change', function () {
+          addAttachmentFiles(prefix, input.files);
+          input.value = '';
+        });
+
+        dropzone.addEventListener('dragenter', function (event) {
+          event.preventDefault();
+          dragDepth++;
+          if (!attachmentsBusy[prefix]) {
+            dropzone.classList.add('pfms-dragover');
+          }
+        });
+
+        dropzone.addEventListener('dragover', function (event) {
+          event.preventDefault();
+          event.dataTransfer.dropEffect = attachmentsBusy[prefix] ? 'none' : 'copy';
+        });
+
+        dropzone.addEventListener('dragleave', function () {
+          dragDepth = Math.max(0, dragDepth - 1);
+          if (dragDepth === 0) {
+            dropzone.classList.remove('pfms-dragover');
+          }
+        });
+
+        dropzone.addEventListener('drop', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          dragDepth = 0;
+          dropzone.classList.remove('pfms-dragover');
+          addAttachmentFiles(prefix, event.dataTransfer.files);
+        });
+      }
+
+      function initAttachments() {
+        initAttachmentDropzone('receive');
+        initAttachmentDropzone('make');
+
+        // A file dropped just outside the box would otherwise make the
+        // browser open it and leave the app. Accept it on the active form.
+        window.addEventListener('dragover', function (event) {
+          event.preventDefault();
+        });
+        window.addEventListener('drop', function (event) {
+          event.preventDefault();
+          var prefix = getActivePaymentPrefix();
+          if (prefix && event.dataTransfer) {
+            addAttachmentFiles(prefix, event.dataTransfer.files);
+          }
+        });
+
+        // Cmd+V / Ctrl+V a screenshot or copied file onto a payment form.
+        document.addEventListener('paste', function (event) {
+          var prefix = getActivePaymentPrefix();
+          var items = event.clipboardData && event.clipboardData.files;
+          if (!prefix || !items || !items.length) {
+            return;
+          }
+          event.preventDefault();
+          var files = [];
+          for (var i = 0; i < items.length; i++) {
+            var file = items[i];
+            if (!file.name || file.name === 'image.png') {
+              file = new File([file], 'pasted-' + Date.now() + '-' + (i + 1) + '.png', { type: file.type || 'image/png' });
+            }
+            files.push(file);
+          }
+          addAttachmentFiles(prefix, files);
+        });
+      }
+
+      function renderSuccessAttachments(prefix, attachments, logFailed) {
+        var row = document.getElementById(prefix + '-success-attachments-row');
+        var value = document.getElementById(prefix + '-success-attachments');
+        value.innerHTML = '';
+
+        if (!attachments || !attachments.length) {
+          row.classList.add('pfms-hidden');
+          return;
+        }
+
+        attachments.forEach(function (attachment, index) {
+          if (index > 0) {
+            value.appendChild(document.createElement('br'));
+          }
+          var link = document.createElement('a');
+          link.href = attachment.url;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = attachment.name;
+          value.appendChild(link);
+        });
+
+        if (logFailed) {
+          var note = document.createElement('div');
+          note.className = 'pfms-form-error';
+          note.textContent = 'Saved to Drive, but not listed in the Attachments sheet.';
+          value.appendChild(note);
+        }
+
+        row.classList.remove('pfms-hidden');
+      }
+
+      // Shared save flow: upload invoices, save the payment, then record the
+      // invoice links next to the payment details in the Attachments sheet.
+      function savePaymentWithAttachments(options) {
+        var prefix = options.prefix;
+        var payment = options.payment;
+        var hasFiles = pendingAttachments[prefix].length > 0;
+        var savedAttachments = [];
+
+        showSaveError(prefix, '');
+        options.setButtonState(true, hasFiles ? 'Uploading...' : 'Saving...');
+        setAttachmentsBusy(prefix, true);
+
+        var meta = {
+          paymentType: options.paymentType,
+          property: payment.property,
+          date: payment.date
+        };
+
+        uploadPendingAttachments(prefix, meta, function (current, total) {
+          options.setButtonState(true, 'Uploading ' + current + ' of ' + total + '...');
+        })
+          .then(function (attachments) {
+            savedAttachments = attachments;
+            options.setButtonState(true, 'Saving...');
+            return runServer(options.serverFunction, payment);
+          })
+          .then(function () {
+            if (!savedAttachments.length) {
+              return false;
+            }
+            return runServer('logPaymentAttachments', options.paymentType, payment, savedAttachments)
+              .then(function () {
+                return false;
+              })
+              .catch(function (error) {
+                console.error(error);
+                return true;
+              });
+          })
+          .then(function (logFailed) {
+            setAttachmentsBusy(prefix, false);
+            options.setButtonState(false);
+            clearAttachments(prefix);
+            renderSuccessAttachments(prefix, savedAttachments, logFailed);
+            options.onSuccess(payment);
+          })
+          .catch(function (error) {
+            console.error(error);
+            setAttachmentsBusy(prefix, false);
+            options.setButtonState(false);
+            showSaveError(prefix, 'Could not save: ' + getErrorMessage(error));
+          });
+      }
+
       document.addEventListener('DOMContentLoaded', function () {
         initializePfmsApp();
+        initAttachments();
 
         var propertySaveButton = document.getElementById('property-save-btn');
         var propertiesForm = document.getElementById('properties-form');
