@@ -41,7 +41,8 @@ function getPfmsSettings() {
     sheets: sheets,
     spreadsheet: { name: spreadsheet.getName(), url: spreadsheet.getUrl() },
     invoiceFolderUrl: findFolderUrl_(scriptProperties.getProperty('PFMS_INVOICE_FOLDER_ID'), PFMS_INVOICE_ROOT_FOLDER_NAME),
-    reportsFolderUrl: findFolderUrl_('', PFMS_REPORTS_FOLDER_NAME)
+    reportsFolderUrl: findFolderUrl_('', PFMS_REPORTS_FOLDER_NAME),
+    aiEnabled: !!getAnthropicApiKey_()
   };
 }
 
