@@ -231,6 +231,7 @@ function readDashboardTransactions_(timeZone) {
         property: cellText_(row, columns.property),
         category: cellText_(row, categoryColumn),
         enteredBy: cellText_(row, columns.enteredBy),
+        notes: cellText_(row, columns.notes),
         order: order++
       });
       rowsUsed++;
