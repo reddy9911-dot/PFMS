@@ -280,6 +280,36 @@
         box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
       }
 
+      .pfms-person-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .pfms-person-btn {
+        flex: 1 1 120px;
+        border: 2px solid #d0d7de;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #1a1a1a;
+        padding: 12px 14px;
+        font-size: 15px;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+      }
+
+      .pfms-person-btn:hover {
+        border-color: #2d6a4f;
+      }
+
+      .pfms-person-btn.pfms-selected {
+        background: #2d6a4f;
+        border-color: #2d6a4f;
+        color: #ffffff;
+      }
+
       .pfms-radio-group {
         display: flex;
         gap: 24px;
@@ -744,6 +774,12 @@
 
                 <div class="pfms-form-column">
                   <div class="pfms-form-group">
+                    <span class="pfms-form-label">Entered By</span>
+                    <div id="receive-person-group" class="pfms-person-group" role="radiogroup" aria-label="Entered by"></div>
+                    <div id="receive-person-error" class="pfms-form-error pfms-hidden">Please choose who is entering this payment.</div>
+                  </div>
+
+                  <div class="pfms-form-group">
                     <label class="pfms-form-label" for="receive-income-type">Income Type</label>
                     <select id="receive-income-type" class="pfms-form-control">
                       <option value="Rent">Rent</option>
@@ -831,6 +867,10 @@
                 <span class="pfms-success-label">Date</span>
                 <span id="receive-success-date" class="pfms-success-value"></span>
               </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Entered By</span>
+                <span id="receive-success-person" class="pfms-success-value"></span>
+              </div>
               <div id="receive-success-attachments-row" class="pfms-success-row pfms-hidden">
                 <span class="pfms-success-label">Invoices</span>
                 <span id="receive-success-attachments" class="pfms-success-value"></span>
@@ -871,6 +911,12 @@
                 </div>
 
                 <div class="pfms-form-column">
+                  <div class="pfms-form-group">
+                    <span class="pfms-form-label">Entered By</span>
+                    <div id="make-person-group" class="pfms-person-group" role="radiogroup" aria-label="Entered by"></div>
+                    <div id="make-person-error" class="pfms-form-error pfms-hidden">Please choose who is entering this payment.</div>
+                  </div>
+
                   <div class="pfms-form-group">
                     <label class="pfms-form-label" for="make-expense-category">Expense Category</label>
                     <select id="make-expense-category" class="pfms-form-control"></select>
@@ -953,6 +999,10 @@
               <div class="pfms-success-row">
                 <span class="pfms-success-label">Date</span>
                 <span id="make-success-date" class="pfms-success-value"></span>
+              </div>
+              <div class="pfms-success-row">
+                <span class="pfms-success-label">Entered By</span>
+                <span id="make-success-person" class="pfms-success-value"></span>
               </div>
               <div id="make-success-attachments-row" class="pfms-success-row pfms-hidden">
                 <span class="pfms-success-label">Invoices</span>
@@ -1240,6 +1290,7 @@
       var propertiesCache = [];
       var companiesCache = [];
       var propertyCompaniesCache = [];
+      var selectedPerson = '';
 
       function showScreen(screenId) {
         var screens = document.querySelectorAll('.pfms-screen');
@@ -1302,6 +1353,7 @@
         document.getElementById('receive-success-amount').textContent = payment.amount;
         document.getElementById('receive-success-currency').textContent = payment.currency;
         document.getElementById('receive-success-date').textContent = payment.date;
+        document.getElementById('receive-success-person').textContent = payment.enteredBy || '';
         document.getElementById('receive-payment-form-view').classList.add('pfms-hidden');
         document.getElementById('receive-payment-success-view').classList.remove('pfms-hidden');
       }
@@ -1436,6 +1488,7 @@
       function hideReceiveValidationErrors() {
         document.getElementById('receive-property-error').classList.add('pfms-hidden');
         document.getElementById('receive-amount-error').classList.add('pfms-hidden');
+        document.getElementById('receive-person-error').classList.add('pfms-hidden');
       }
 
       function validateReceivePayment() {
@@ -1447,6 +1500,11 @@
 
         if (!selectedReceiveProperty) {
           document.getElementById('receive-property-error').classList.remove('pfms-hidden');
+          isValid = false;
+        }
+
+        if (!selectedPerson) {
+          document.getElementById('receive-person-error').classList.remove('pfms-hidden');
           isValid = false;
         }
 
@@ -1469,7 +1527,8 @@
           currency: getSelectedReceiveCurrency(),
           amount: parseFloat(document.getElementById('receive-amount').value),
           date: document.getElementById('receive-date').value,
-          notes: document.getElementById('receive-notes').value
+          notes: document.getElementById('receive-notes').value,
+          enteredBy: selectedPerson
         };
 
         savePaymentWithAttachments({
@@ -1501,6 +1560,7 @@
         document.getElementById('make-success-amount').textContent = payment.amount;
         document.getElementById('make-success-currency').textContent = payment.currency;
         document.getElementById('make-success-date').textContent = payment.date;
+        document.getElementById('make-success-person').textContent = payment.enteredBy || '';
         document.getElementById('make-payment-form-view').classList.add('pfms-hidden');
         document.getElementById('make-payment-success-view').classList.remove('pfms-hidden');
       }
@@ -1659,6 +1719,7 @@
       function hideMakeValidationErrors() {
         document.getElementById('make-property-error').classList.add('pfms-hidden');
         document.getElementById('make-amount-error').classList.add('pfms-hidden');
+        document.getElementById('make-person-error').classList.add('pfms-hidden');
       }
 
       function validateMakePayment() {
@@ -1670,6 +1731,11 @@
 
         if (!selectedMakeProperty) {
           document.getElementById('make-property-error').classList.remove('pfms-hidden');
+          isValid = false;
+        }
+
+        if (!selectedPerson) {
+          document.getElementById('make-person-error').classList.remove('pfms-hidden');
           isValid = false;
         }
 
@@ -1692,7 +1758,8 @@
           currency: getSelectedMakeCurrency(),
           amount: parseFloat(document.getElementById('make-amount').value),
           date: document.getElementById('make-date').value,
-          notes: document.getElementById('make-notes').value
+          notes: document.getElementById('make-notes').value,
+          enteredBy: selectedPerson
         };
 
         savePaymentWithAttachments({
@@ -2333,6 +2400,80 @@
           .archiveCompany(selectedCompanyId);
       }
 
+      /* ---------- Entered by ---------- */
+
+      // Shown until the PFMS_PEOPLE Script Property is set (see People.gs).
+      var PFMS_DEFAULT_PEOPLE = ['Owner', 'Wife'];
+      var PFMS_PERSON_STORAGE_KEY = 'pfms.enteredBy';
+      var pfmsPeople = PFMS_DEFAULT_PEOPLE.slice();
+
+      function readSavedPerson() {
+        try {
+          return window.localStorage.getItem(PFMS_PERSON_STORAGE_KEY) || '';
+        } catch (e) {
+          return '';
+        }
+      }
+
+      function savePersonChoice(name) {
+        try {
+          window.localStorage.setItem(PFMS_PERSON_STORAGE_KEY, name);
+        } catch (e) {
+          // Private browsing or blocked storage: the choice just isn't remembered.
+        }
+      }
+
+      function selectPerson(name) {
+        selectedPerson = name;
+        savePersonChoice(name);
+        renderPersonPickers();
+        document.getElementById('receive-person-error').classList.add('pfms-hidden');
+        document.getElementById('make-person-error').classList.add('pfms-hidden');
+      }
+
+      function renderPersonPickers() {
+        ['receive', 'make'].forEach(function (prefix) {
+          var group = document.getElementById(prefix + '-person-group');
+          group.innerHTML = '';
+          pfmsPeople.forEach(function (name) {
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'pfms-person-btn' + (name === selectedPerson ? ' pfms-selected' : '');
+            button.setAttribute('role', 'radio');
+            button.setAttribute('aria-checked', name === selectedPerson ? 'true' : 'false');
+            button.textContent = name;
+            button.onclick = function () {
+              selectPerson(name);
+            };
+            group.appendChild(button);
+          });
+        });
+      }
+
+      function applyPeopleList(people) {
+        var cleaned = (people || []).map(function (name) {
+          return String(name || '').trim();
+        }).filter(Boolean);
+        if (cleaned.length) {
+          pfmsPeople = cleaned;
+        }
+
+        var saved = readSavedPerson();
+        if (pfmsPeople.indexOf(selectedPerson) === -1) {
+          selectedPerson = pfmsPeople.indexOf(saved) !== -1 ? saved : '';
+        }
+        renderPersonPickers();
+      }
+
+      function initPersonPickers() {
+        applyPeopleList(PFMS_DEFAULT_PEOPLE);
+        runServer('getPfmsPeople')
+          .then(applyPeopleList)
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+
       /* ---------- Invoice / factura attachments ---------- */
 
       var PFMS_MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
@@ -2753,7 +2894,8 @@
         var meta = {
           paymentType: options.paymentType,
           property: payment.property,
-          date: payment.date
+          date: payment.date,
+          enteredBy: payment.enteredBy
         };
 
         uploadPendingAttachments(prefix, meta, function (current, total) {
@@ -2795,6 +2937,7 @@
       document.addEventListener('DOMContentLoaded', function () {
         initializePfmsApp();
         initAttachments();
+        initPersonPickers();
 
         var propertySaveButton = document.getElementById('property-save-btn');
         var propertiesForm = document.getElementById('properties-form');
