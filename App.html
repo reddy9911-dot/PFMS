@@ -639,6 +639,42 @@
         opacity: 0.5;
       }
 
+      .pfms-autofill {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #b6d4f2;
+        background: #eef6fd;
+        color: #1a1a1a;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .pfms-autofill-loading {
+        color: #5f6368;
+      }
+
+      .pfms-autofill-tip {
+        border-color: #d0d7de;
+        background: #f4f6f8;
+        color: #5f6368;
+      }
+
+      .pfms-autofill-warning {
+        border-color: #f2c48b;
+        background: #fff6e8;
+      }
+
+      .pfms-autofill-warning-text {
+        color: #8a4b00;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+
+      .pfms-autofill .pfms-link-btn {
+        padding-top: 4px;
+      }
+
       .pfms-success-value a {
         color: #1d4e89;
       }
@@ -1215,6 +1251,23 @@
         vertical-align: middle;
       }
 
+      .pfms-settings-ai-status {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .pfms-settings-ai-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .pfms-settings-ai-form .pfms-form-control {
+        flex: 1;
+        min-width: 0;
+      }
+
       .pfms-settings-links,
       .pfms-settings-tips {
         list-style: none;
@@ -1680,6 +1733,7 @@
                       accept="image/*,application/pdf,.pdf,.xml,text/xml,application/xml,.doc,.docx,.xls,.xlsx,.csv">
                     <ul id="receive-attachment-list" class="pfms-attachment-list"></ul>
                     <div id="receive-attachment-error" class="pfms-form-error pfms-hidden"></div>
+                    <div id="receive-autofill" class="pfms-autofill pfms-hidden" role="status" aria-live="polite"></div>
                   </div>
 
                   <div id="receive-save-error" class="pfms-form-error pfms-hidden"></div>
@@ -1813,6 +1867,7 @@
                       accept="image/*,application/pdf,.pdf,.xml,text/xml,application/xml,.doc,.docx,.xls,.xlsx,.csv">
                     <ul id="make-attachment-list" class="pfms-attachment-list"></ul>
                     <div id="make-attachment-error" class="pfms-form-error pfms-hidden"></div>
+                    <div id="make-autofill" class="pfms-autofill pfms-hidden" role="status" aria-live="polite"></div>
                   </div>
 
                   <div id="make-save-error" class="pfms-form-error pfms-hidden"></div>
@@ -2303,6 +2358,28 @@
             </div>
 
             <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title">Factura auto-fill</h3>
+              <p class="pfms-settings-help">
+                When you attach a factura&rsquo;s <strong>XML</strong> file, the amount, currency, date and supplier fill in
+                automatically. That&rsquo;s free and happens on this device.
+              </p>
+              <p class="pfms-settings-help">
+                To also read <strong>PDFs and photos</strong>, add an Anthropic API key. Those files are sent to Anthropic
+                to be read, and each one costs roughly 1&ndash;5 US cents on your Anthropic account.
+              </p>
+              <div id="settings-ai-status" class="pfms-settings-ai-status"></div>
+              <div id="settings-ai-form" class="pfms-settings-ai-form">
+                <input type="password" id="settings-ai-key" class="pfms-form-control" placeholder="sk-ant-&hellip;"
+                  autocomplete="off" spellcheck="false" aria-label="Anthropic API key">
+                <button type="button" id="settings-ai-save" class="pfms-btn pfms-btn-toolbar pfms-btn-new" onclick="saveSettingsAiKey()">SAVE KEY</button>
+              </div>
+              <div class="pfms-settings-save-row">
+                <button type="button" id="settings-ai-remove" class="pfms-link-btn pfms-hidden" onclick="removeSettingsAiKey()">Turn off AI reading</button>
+                <span id="settings-ai-message" class="pfms-settings-message pfms-hidden"></span>
+              </div>
+            </div>
+
+            <div class="pfms-dash-card">
               <h3 class="pfms-dash-card-title">Google Drive</h3>
               <ul id="settings-links" class="pfms-settings-links"></ul>
             </div>
@@ -2452,6 +2529,8 @@
         setReceiveSaveButtonState(false);
         clearAttachments('receive');
         showSaveError('receive', '');
+        clearFieldTouches('receive');
+        hideAutoFill('receive');
 
         var buttons = document.querySelectorAll('#receive-property-grid .pfms-property-btn');
         for (var i = 0; i < buttons.length; i++) {
@@ -2659,6 +2738,8 @@
         setMakeSaveButtonState(false);
         clearAttachments('make');
         showSaveError('make', '');
+        clearFieldTouches('make');
+        hideAutoFill('make');
 
         var buttons = document.querySelectorAll('#make-property-grid .pfms-property-btn');
         for (var i = 0; i < buttons.length; i++) {
@@ -3991,6 +4072,7 @@
         setSettingsMessage('settings-device-message', '');
         setSettingsMessage('settings-people-message', '');
         setSettingsMessage('settings-sheets-message', '');
+        setSettingsMessage('settings-ai-message', '');
 
         document.getElementById('settings-status').innerHTML = 'Loading&hellip;';
         document.getElementById('settings-status').classList.remove('pfms-hidden');
@@ -4015,6 +4097,52 @@
         document.querySelector('input[name="settings-sheet-mode"][value="' + (data.autoDetect ? 'auto' : 'manual') + '"]').checked = true;
         renderSettingsSheets();
         renderSettingsLinks(data);
+        renderSettingsAi(!!data.aiEnabled);
+      }
+
+      function renderSettingsAi(enabled) {
+        facturaAiEnabled = enabled;
+        document.getElementById('settings-ai-status').textContent =
+          'AI reading for PDFs and photos: ' + (enabled ? 'On' : 'Off');
+        document.getElementById('settings-ai-remove').classList.toggle('pfms-hidden', !enabled);
+        document.getElementById('settings-ai-key').placeholder = enabled ? 'New key to replace it' : 'sk-ant-\u2026';
+      }
+
+      function saveSettingsAiKey() {
+        var input = document.getElementById('settings-ai-key');
+        var button = document.getElementById('settings-ai-save');
+        if (!input.value.trim()) {
+          setSettingsMessage('settings-ai-message', 'Paste your Anthropic API key first.', true);
+          return;
+        }
+        button.disabled = true;
+        setSettingsMessage('settings-ai-message', 'Checking the key\u2026');
+
+        runServer('saveAnthropicApiKey', input.value)
+          .then(function (status) {
+            input.value = '';
+            renderSettingsAi(!!status.aiEnabled);
+            setSettingsMessage('settings-ai-message', 'Key saved. PDFs and photos will now be read automatically.');
+          })
+          .catch(function (error) {
+            console.error(error);
+            setSettingsMessage('settings-ai-message', getErrorMessage(error), true);
+          })
+          .then(function () {
+            button.disabled = false;
+          });
+      }
+
+      function removeSettingsAiKey() {
+        runServer('removeAnthropicApiKey')
+          .then(function (status) {
+            renderSettingsAi(!!status.aiEnabled);
+            setSettingsMessage('settings-ai-message', 'AI reading is off. XML facturas still fill in automatically.');
+          })
+          .catch(function (error) {
+            console.error(error);
+            setSettingsMessage('settings-ai-message', getErrorMessage(error), true);
+          });
       }
 
       function renderSettingsPeople(names) {
@@ -4547,6 +4675,362 @@
           });
       }
 
+      /* ---------- Factura auto-fill ---------- */
+
+      var facturaAiEnabled = false;
+      var autoFillTokens = { receive: 0, make: 0 };
+      var autoFillUndo = { receive: null, make: null };
+      var autoFillTipShown = { receive: false, make: false };
+      var fieldTouches = { receive: {}, make: {} };
+
+      var FACTURA_ROOTS = {
+        FacturaElectronica: 'invoice',
+        FacturaElectronicaCompra: 'invoice',
+        FacturaElectronicaExportacion: 'invoice',
+        TiqueteElectronico: 'receipt',
+        ReciboElectronicoPago: 'receipt',
+        NotaCreditoElectronica: 'credit_note',
+        NotaDebitoElectronica: 'debit_note'
+      };
+
+      function getCategoryFieldId(prefix) {
+        return prefix === 'receive' ? 'receive-income-type' : 'make-expense-category';
+      }
+
+      function clearFieldTouches(prefix) {
+        fieldTouches[prefix] = {};
+      }
+
+      function initAutoFill() {
+        ['receive', 'make'].forEach(function (prefix) {
+          var track = function (field) {
+            return function (event) {
+              if (event.isTrusted) {
+                fieldTouches[prefix][field] = true;
+              }
+            };
+          };
+          document.getElementById(prefix + '-amount').addEventListener('input', track('amount'));
+          document.getElementById(prefix + '-date').addEventListener('change', track('date'));
+          document.getElementById(prefix + '-notes').addEventListener('input', track('notes'));
+          document.getElementById(getCategoryFieldId(prefix)).addEventListener('change', track('category'));
+          var radios = document.querySelectorAll('input[name="' + prefix + '-currency"]');
+          for (var i = 0; i < radios.length; i++) {
+            radios[i].addEventListener('change', track('currency'));
+          }
+        });
+
+        runServer('getFacturaReaderStatus')
+          .then(function (status) {
+            facturaAiEnabled = !!(status && status.aiEnabled);
+          })
+          .catch(function (error) {
+            // Facturas.gs not deployed yet: XML auto-fill still works.
+            console.error(error);
+          });
+      }
+
+      function hideAutoFill(prefix) {
+        autoFillTokens[prefix]++;
+        autoFillUndo[prefix] = null;
+        var box = document.getElementById(prefix + '-autofill');
+        if (box) {
+          box.innerHTML = '';
+          box.className = 'pfms-autofill pfms-hidden';
+        }
+      }
+
+      function showAutoFill(prefix, html, variant) {
+        var box = document.getElementById(prefix + '-autofill');
+        box.innerHTML = html;
+        box.className = 'pfms-autofill' + (variant ? ' pfms-autofill-' + variant : '');
+      }
+
+      function isXmlFile(file) {
+        return /\.xml$/i.test(file.name) || /xml/i.test(file.type);
+      }
+
+      function isAiReadableFile(file) {
+        return /^application\/pdf$/i.test(file.type) || /\.pdf$/i.test(file.name) ||
+          /^image\/(jpeg|png|gif|webp|heic|heif)$/i.test(file.type);
+      }
+
+      // Finds the first child element with the given local name, ignoring
+      // XML namespaces (Hacienda's schemas use versioned namespaces).
+      function xmlChild(parent, name) {
+        if (!parent) {
+          return null;
+        }
+        for (var i = 0; i < parent.children.length; i++) {
+          if (parent.children[i].localName === name) {
+            return parent.children[i];
+          }
+        }
+        return null;
+      }
+
+      function xmlPath(parent) {
+        var node = parent;
+        for (var i = 1; i < arguments.length && node; i++) {
+          node = xmlChild(node, arguments[i]);
+        }
+        return node ? node.textContent.trim() : '';
+      }
+
+      // Reads a Costa Rica factura electrónica (Hacienda XML, v4.x).
+      // Returns null for anything else, including Hacienda's acceptance
+      // messages (MensajeHacienda / MensajeReceptor).
+      function parseFacturaXml(text) {
+        var doc;
+        try {
+          doc = new DOMParser().parseFromString(text, 'application/xml');
+        } catch (e) {
+          return null;
+        }
+        if (!doc || doc.getElementsByTagName('parsererror').length) {
+          return null;
+        }
+
+        var root = doc.documentElement;
+        var documentType = FACTURA_ROOTS[root.localName];
+        if (!documentType) {
+          return null;
+        }
+
+        var summary = xmlChild(root, 'ResumenFactura');
+        var total = parseFloat(xmlPath(summary, 'TotalComprobante'));
+        var currency = (xmlPath(summary, 'CodigoTipoMoneda', 'CodigoMoneda') || xmlPath(summary, 'CodigoMoneda') || 'CRC').toUpperCase();
+        var firstLine = xmlChild(xmlChild(root, 'DetalleServicio'), 'LineaDetalle');
+
+        return {
+          source: 'xml',
+          isInvoice: true,
+          documentType: documentType,
+          total: isFinite(total) ? Math.abs(total) : null,
+          currency: currency,
+          date: xmlPath(root, 'FechaEmision').substring(0, 10),
+          supplierName: xmlPath(root, 'Emisor', 'NombreComercial') || xmlPath(root, 'Emisor', 'Nombre'),
+          supplierId: xmlPath(root, 'Emisor', 'Identificacion', 'Numero'),
+          customerName: xmlPath(root, 'Receptor', 'NombreComercial') || xmlPath(root, 'Receptor', 'Nombre'),
+          invoiceNumber: xmlPath(root, 'NumeroConsecutivo'),
+          description: firstLine ? xmlPath(firstLine, 'Detalle') : '',
+          suggestedCategory: ''
+        };
+      }
+
+      function readFileText(file) {
+        if (file.text) {
+          return file.text();
+        }
+        return new Promise(function (resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function () { resolve(String(reader.result || '')); };
+          reader.onerror = function () { reject(new Error('Could not read the file.')); };
+          reader.readAsText(file);
+        });
+      }
+
+      function findFacturaInXmlFiles(files) {
+        return files.reduce(function (chain, file) {
+          return chain.then(function (found) {
+            if (found) {
+              return found;
+            }
+            return readFileText(file).then(function (text) {
+              var result = parseFacturaXml(text);
+              return result ? { result: result, file: file } : null;
+            }).catch(function () {
+              return null;
+            });
+          });
+        }, Promise.resolve(null));
+      }
+
+      function getCategoryOptions(prefix) {
+        var select = document.getElementById(getCategoryFieldId(prefix));
+        return Array.prototype.map.call(select.options, function (o) {
+          return o.value;
+        }).filter(Boolean);
+      }
+
+      function autoFillFromAttachments(prefix, added) {
+        if (!added || !added.length) {
+          return;
+        }
+        var files = added.map(function (entry) { return entry.file; });
+        var xmlFiles = files.filter(isXmlFile);
+        var token = ++autoFillTokens[prefix];
+
+        var tryAi = function () {
+          var candidate = files.filter(isAiReadableFile)[0];
+          if (!candidate) {
+            return;
+          }
+          var amountEmpty = !document.getElementById(prefix + '-amount').value;
+          if (!facturaAiEnabled) {
+            if (amountEmpty && !autoFillTipShown[prefix]) {
+              autoFillTipShown[prefix] = true;
+              showAutoFill(prefix, 'Tip: add the factura&rsquo;s <strong>XML</strong> file too and the amount, date and supplier fill in automatically.', 'tip');
+            }
+            return;
+          }
+          if (!amountEmpty || fieldTouches[prefix].amount) {
+            return;
+          }
+          readFacturaWithAiFromFile(prefix, candidate, token);
+        };
+
+        if (!xmlFiles.length) {
+          tryAi();
+          return;
+        }
+
+        findFacturaInXmlFiles(xmlFiles).then(function (found) {
+          if (token !== autoFillTokens[prefix]) {
+            return;
+          }
+          if (found) {
+            applyAutoFill(prefix, found.result, found.file.name);
+          } else {
+            tryAi();
+          }
+        });
+      }
+
+      function readFacturaWithAiFromFile(prefix, file, token) {
+        showAutoFill(prefix, 'Reading ' + escapeHtml(file.name) + '&hellip;', 'loading');
+
+        compressImageIfLarge(file)
+          .then(function (prepared) {
+            var mimeType = prepared.mimeType || (/\.pdf$/i.test(file.name) ? 'application/pdf' : '');
+            if (!/^(application\/pdf|image\/(jpeg|png|gif|webp))$/i.test(mimeType)) {
+              throw new Error('This photo format can\'t be read. Try a JPEG or PDF.');
+            }
+            return readBlobAsBase64(prepared.blob).then(function (base64) {
+              return runServer('readFacturaWithAI',
+                { name: prepared.name, mimeType: mimeType, base64: base64 },
+                { paymentType: prefix === 'receive' ? 'Income' : 'Expense', categories: getCategoryOptions(prefix) });
+            });
+          })
+          .then(function (result) {
+            if (token === autoFillTokens[prefix]) {
+              applyAutoFill(prefix, result, file.name);
+            }
+          })
+          .catch(function (error) {
+            console.error(error);
+            if (token === autoFillTokens[prefix]) {
+              showAutoFill(prefix, 'Couldn&rsquo;t read ' + escapeHtml(file.name) + ': ' + escapeHtml(getErrorMessage(error)) +
+                ' Enter the details yourself.', 'warning');
+            }
+          });
+      }
+
+      function getFormValues(prefix) {
+        var checked = document.querySelector('input[name="' + prefix + '-currency"]:checked');
+        return {
+          amount: document.getElementById(prefix + '-amount').value,
+          date: document.getElementById(prefix + '-date').value,
+          notes: document.getElementById(prefix + '-notes').value,
+          currency: checked ? checked.value : 'USD',
+          category: document.getElementById(getCategoryFieldId(prefix)).value
+        };
+      }
+
+      function setFormValues(prefix, values) {
+        document.getElementById(prefix + '-amount').value = values.amount;
+        document.getElementById(prefix + '-date').value = values.date;
+        document.getElementById(prefix + '-notes').value = values.notes;
+        var radio = document.querySelector('input[name="' + prefix + '-currency"][value="' + values.currency + '"]');
+        if (radio) {
+          radio.checked = true;
+        }
+        document.getElementById(getCategoryFieldId(prefix)).value = values.category;
+      }
+
+      function applyAutoFill(prefix, r, fileName) {
+        if (!r || r.isInvoice === false) {
+          showAutoFill(prefix, escapeHtml(fileName) + ' doesn&rsquo;t look like an invoice, so nothing was filled in.', 'warning');
+          return;
+        }
+
+        var before = getFormValues(prefix);
+        var touched = fieldTouches[prefix];
+        var filled = [];
+        var warnings = [];
+        var knownCurrency = r.currency === 'USD' || r.currency === 'CRC';
+        var isCredit = r.documentType === 'credit_note';
+        var amountField = document.getElementById(prefix + '-amount');
+
+        if (isCredit) {
+          warnings.push('This is a credit note (nota de crédito), so the amount was not filled in.');
+        } else if (r.total !== null && r.total !== undefined) {
+          if (r.currency && !knownCurrency) {
+            warnings.push('The total is in ' + r.currency + ' (' + r.total + '). Convert it and enter the amount yourself.');
+          } else if (!touched.amount && !amountField.value) {
+            amountField.value = r.currency === 'CRC' ? String(Math.round(r.total * 100) / 100) : r.total.toFixed(2);
+            filled.push('amount ' + formatMoney(r.total, r.currency || before.currency));
+            if (knownCurrency && !touched.currency) {
+              var radio = document.querySelector('input[name="' + prefix + '-currency"][value="' + r.currency + '"]');
+              if (radio) {
+                radio.checked = true;
+              }
+            }
+          } else if (Math.abs(parseFloat(amountField.value) - r.total) > 0.005) {
+            warnings.push('The factura total is ' + formatMoney(r.total, r.currency || before.currency) +
+              ', but the amount entered is ' + amountField.value + '.');
+          }
+        }
+
+        if (r.date && /^\d{4}-\d{2}-\d{2}$/.test(r.date) && !touched.date && r.date !== before.date) {
+          document.getElementById(prefix + '-date').value = r.date;
+          filled.push('date ' + formatShortDate(r.date) + ', ' + r.date.substring(0, 4));
+        }
+
+        if (r.suggestedCategory && !touched.category && getCategoryOptions(prefix).indexOf(r.suggestedCategory) !== -1 &&
+            r.suggestedCategory !== before.category) {
+          document.getElementById(getCategoryFieldId(prefix)).value = r.suggestedCategory;
+          filled.push(r.suggestedCategory);
+        }
+
+        var party = prefix === 'receive' ? r.customerName : r.supplierName;
+        var notesField = document.getElementById(prefix + '-notes');
+        if (!notesField.value.trim()) {
+          var label = isCredit ? 'Nota de crédito' : (r.documentType === 'receipt' ? 'Tiquete' : 'Factura');
+          var noteParts = [r.invoiceNumber ? label + ' ' + r.invoiceNumber : '', party, r.description].filter(Boolean);
+          if (noteParts.length) {
+            notesField.value = noteParts.join(' · ');
+            filled.push('notes');
+          }
+        }
+
+        if (!filled.length && !warnings.length) {
+          showAutoFill(prefix, 'Read ' + escapeHtml(fileName) + '; the form already matches it.', 'tip');
+          return;
+        }
+
+        autoFillUndo[prefix] = before;
+        var html = '';
+        if (filled.length) {
+          html += '<div><strong>Filled from ' + escapeHtml(fileName) + (r.source === 'ai' ? ' (read by AI)' : '') + ':</strong> ' +
+            escapeHtml(filled.join(' · ')) + '. Check before saving.</div>';
+        }
+        warnings.forEach(function (w) {
+          html += '<div class="pfms-autofill-warning-text">' + escapeHtml(w) + '</div>';
+        });
+        if (filled.length) {
+          html += '<button type="button" class="pfms-link-btn" onclick="undoAutoFill(\'' + prefix + '\')">Undo</button>';
+        }
+        showAutoFill(prefix, html, filled.length ? 'done' : 'warning');
+      }
+
+      function undoAutoFill(prefix) {
+        if (autoFillUndo[prefix]) {
+          setFormValues(prefix, autoFillUndo[prefix]);
+        }
+        hideAutoFill(prefix);
+      }
+
       /* ---------- Invoice / factura attachments ---------- */
 
       var PFMS_MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
@@ -4617,6 +5101,7 @@
 
         var list = pendingAttachments[prefix];
         var problems = [];
+        var added = [];
 
         for (var i = 0; i < fileList.length; i++) {
           var file = fileList[i];
@@ -4645,15 +5130,18 @@
             continue;
           }
 
-          list.push({
+          var entry = {
             file: file,
             previewUrl: /^image\//.test(file.type) ? URL.createObjectURL(file) : '',
             uploaded: null
-          });
+          };
+          list.push(entry);
+          added.push(entry);
         }
 
         showAttachmentError(prefix, problems.join(' '));
         renderAttachmentList(prefix);
+        autoFillFromAttachments(prefix, added);
       }
 
       function removeAttachment(prefix, index) {
@@ -4677,6 +5165,7 @@
         pendingAttachments[prefix] = [];
         showAttachmentError(prefix, '');
         renderAttachmentList(prefix);
+        hideAutoFill(prefix);
       }
 
       function renderAttachmentList(prefix) {
@@ -5023,6 +5512,7 @@
         initializePfmsApp();
         initAttachments();
         initPersonPickers();
+        initAutoFill();
 
         var propertySaveButton = document.getElementById('property-save-btn');
         var propertiesForm = document.getElementById('properties-form');
