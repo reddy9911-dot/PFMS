@@ -1119,6 +1119,136 @@
         }
       }
 
+      /* ---------- Settings ---------- */
+
+      .pfms-panel-settings {
+        max-width: 760px;
+      }
+
+      .pfms-settings-toolbar {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0 0 16px;
+      }
+
+      .pfms-settings-toolbar .pfms-btn-back {
+        margin: 0;
+      }
+
+      .pfms-settings-help {
+        font-size: 13px;
+        color: var(--pfms-ink-secondary);
+        margin: -4px 0 12px;
+        line-height: 1.5;
+      }
+
+      .pfms-settings-fields {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 0 12px;
+      }
+
+      .pfms-settings-fields .pfms-form-group {
+        margin-bottom: 8px;
+      }
+
+      .pfms-settings-people {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .pfms-settings-people li {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .pfms-settings-row-actions {
+        margin: 4px 0 12px;
+      }
+
+      .pfms-settings-save-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .pfms-settings-message {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d6a4f;
+      }
+
+      .pfms-settings-message.pfms-error {
+        color: #c1121f;
+      }
+
+      .pfms-settings-mode {
+        flex-wrap: wrap;
+        gap: 10px 24px;
+        margin-bottom: 12px;
+      }
+
+      .pfms-settings-sheet-role {
+        font-size: 12px;
+        color: var(--pfms-ink-secondary);
+      }
+
+      .pfms-settings-table select {
+        width: 100%;
+        min-width: 120px;
+        padding: 8px;
+        font-size: 14px;
+      }
+
+      .pfms-dash-table th.pfms-left,
+      .pfms-dash-table td.pfms-left {
+        text-align: left;
+      }
+
+      .pfms-settings-table td {
+        white-space: normal;
+        vertical-align: middle;
+      }
+
+      .pfms-settings-links,
+      .pfms-settings-tips {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .pfms-settings-links a {
+        color: #1d4e89;
+        font-weight: 600;
+      }
+
+      .pfms-settings-links .pfms-settings-sheet-role {
+        display: block;
+      }
+
+      @media screen and (max-width: 700px) {
+        .pfms-settings-fields {
+          grid-template-columns: 1fr;
+        }
+
+        .pfms-settings-table select {
+          min-width: 128px;
+        }
+
+        .pfms-btn.pfms-btn-toolbar {
+          padding: 10px 16px;
+          font-size: 14px;
+        }
+      }
+
       /* ---------- Reports ---------- */
 
       .pfms-report-filters {
@@ -2109,13 +2239,84 @@
         </div>
       </section>
 
-      <section id="screen-settings" class="pfms-screen<?!= initialScreen === 'settings' ? ' pfms-active' : '' ?>">
-        <div class="pfms-panel">
-          <h2 class="pfms-panel-title">Settings</h2>
-          <p class="pfms-panel-text">Version 1 placeholder screen.</p>
-          <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
-            Back to Home
-          </button>
+      <section id="screen-settings" class="pfms-screen pfms-screen-form<?!= initialScreen === 'settings' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel pfms-panel-dashboard pfms-panel-settings">
+          <h2 class="pfms-panel-title">SETTINGS</h2>
+
+          <div class="pfms-settings-toolbar">
+            <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-back" onclick="showScreen('home')">HOME</button>
+          </div>
+
+          <div class="pfms-dash-card">
+            <h3 class="pfms-dash-card-title">This device</h3>
+            <p class="pfms-settings-help">Saved only on this phone or computer.</p>
+            <div class="pfms-settings-fields">
+              <div class="pfms-form-group">
+                <label class="pfms-form-label" for="settings-device-person">Who uses this device</label>
+                <select id="settings-device-person" class="pfms-form-control"></select>
+              </div>
+              <div class="pfms-form-group">
+                <label class="pfms-form-label" for="settings-device-currency">Dashboard currency</label>
+                <select id="settings-device-currency" class="pfms-form-control">
+                  <option value="USD">USD</option>
+                  <option value="CRC">CRC</option>
+                </select>
+              </div>
+            </div>
+            <div id="settings-device-message" class="pfms-settings-message pfms-hidden"></div>
+          </div>
+
+          <div id="settings-status" class="pfms-dash-status">Loading&hellip;</div>
+
+          <div id="settings-body" class="pfms-hidden">
+            <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title">People</h3>
+              <p class="pfms-settings-help">Names shown under &ldquo;Entered By&rdquo; on payment forms. Shared by everyone who uses the app.</p>
+              <ul id="settings-people-list" class="pfms-settings-people"></ul>
+              <div class="pfms-settings-row-actions">
+                <button type="button" class="pfms-link-btn" onclick="addSettingsPerson()">+ Add person</button>
+              </div>
+              <div class="pfms-settings-save-row">
+                <button type="button" id="settings-people-save" class="pfms-btn pfms-btn-toolbar pfms-btn-new" onclick="saveSettingsPeople()">SAVE NAMES</button>
+                <span id="settings-people-message" class="pfms-settings-message pfms-hidden"></span>
+              </div>
+            </div>
+
+            <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title">Payment data</h3>
+              <p class="pfms-settings-help">Which spreadsheet tabs the Dashboard and Reports read.</p>
+              <div class="pfms-radio-group pfms-settings-mode">
+                <label class="pfms-radio-label">
+                  <input type="radio" name="settings-sheet-mode" value="auto">
+                  Find tabs automatically
+                </label>
+                <label class="pfms-radio-label">
+                  <input type="radio" name="settings-sheet-mode" value="manual">
+                  Choose tabs myself
+                </label>
+              </div>
+              <div id="settings-sheets"></div>
+              <div class="pfms-settings-save-row">
+                <button type="button" id="settings-sheets-save" class="pfms-btn pfms-btn-toolbar pfms-btn-new" onclick="saveSettingsSheets()">SAVE TABS</button>
+                <span id="settings-sheets-message" class="pfms-settings-message pfms-hidden"></span>
+              </div>
+            </div>
+
+            <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title">Google Drive</h3>
+              <ul id="settings-links" class="pfms-settings-links"></ul>
+            </div>
+          </div>
+
+          <div class="pfms-dash-card">
+            <h3 class="pfms-dash-card-title">Add PFMS to your home screen or Dock</h3>
+            <ul class="pfms-settings-tips">
+              <li><strong>iPhone / iPad (Safari):</strong> Share &rsaquo; Add to Home Screen</li>
+              <li><strong>Android (Chrome):</strong> &#x22EE; menu &rsaquo; Add to Home screen</li>
+              <li><strong>Mac (Safari):</strong> File &rsaquo; Add to Dock</li>
+              <li><strong>Mac or PC (Chrome):</strong> &#x22EE; menu &rsaquo; Cast, save, and share &rsaquo; Install page as app</li>
+            </ul>
+          </div>
         </div>
       </section>
     </main>
@@ -2180,6 +2381,10 @@
 
         if (screenId === 'reports') {
           openReports();
+        }
+
+        if (screenId === 'settings') {
+          openSettings();
         }
       }
 
@@ -3705,6 +3910,266 @@
           }
         }, 150);
       });
+
+      /* ---------- Settings ---------- */
+
+      var settingsData = null;
+      var settingsInitialized = false;
+      var SETTINGS_ROLE_LABELS = {
+        income: 'Looks like income',
+        expense: 'Looks like expenses',
+        unknown: 'Has Date and Amount, type unclear',
+        none: 'Not a payment tab',
+        system: 'PFMS tab'
+      };
+
+      function setSettingsMessage(id, text, isError) {
+        var el = document.getElementById(id);
+        el.textContent = text || '';
+        el.classList.toggle('pfms-hidden', !text);
+        el.classList.toggle('pfms-error', !!isError);
+      }
+
+      function initSettings() {
+        if (settingsInitialized) {
+          return;
+        }
+        settingsInitialized = true;
+
+        document.getElementById('settings-device-person').addEventListener('change', function () {
+          if (this.value) {
+            selectPerson(this.value);
+          } else {
+            selectedPerson = '';
+            try {
+              window.localStorage.removeItem(PFMS_PERSON_STORAGE_KEY);
+            } catch (e) {
+              // Nothing remembered anyway.
+            }
+            renderPersonPickers();
+          }
+          setSettingsMessage('settings-device-message', 'Saved on this device.');
+        });
+
+        document.getElementById('settings-device-currency').addEventListener('change', function () {
+          dashboardCurrency = this.value;
+          try {
+            window.localStorage.setItem(PFMS_CURRENCY_STORAGE_KEY, this.value);
+          } catch (e) {
+            // Not remembered; harmless.
+          }
+          setSettingsMessage('settings-device-message', 'Saved on this device.');
+        });
+
+        var modes = document.querySelectorAll('input[name="settings-sheet-mode"]');
+        for (var i = 0; i < modes.length; i++) {
+          modes[i].addEventListener('change', function () {
+            renderSettingsSheets();
+          });
+        }
+      }
+
+      function renderDeviceSettings() {
+        var personSelect = document.getElementById('settings-device-person');
+        personSelect.innerHTML = '<option value="">Ask each time</option>';
+        pfmsPeople.forEach(function (name) {
+          var option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          personSelect.appendChild(option);
+        });
+        personSelect.value = pfmsPeople.indexOf(selectedPerson) !== -1 ? selectedPerson : '';
+
+        var savedCurrency = dashboardCurrency || readSavedCurrency() || 'USD';
+        var currencySelect = document.getElementById('settings-device-currency');
+        currencySelect.value = savedCurrency === 'CRC' ? 'CRC' : 'USD';
+      }
+
+      function openSettings() {
+        initSettings();
+        renderDeviceSettings();
+        setSettingsMessage('settings-device-message', '');
+        setSettingsMessage('settings-people-message', '');
+        setSettingsMessage('settings-sheets-message', '');
+
+        document.getElementById('settings-status').innerHTML = 'Loading&hellip;';
+        document.getElementById('settings-status').classList.remove('pfms-hidden');
+        document.getElementById('settings-body').classList.add('pfms-hidden');
+
+        runServer('getPfmsSettings')
+          .then(renderSettings)
+          .catch(function (error) {
+            console.error(error);
+            document.getElementById('settings-status').innerHTML = 'Could not load settings: ' +
+              escapeHtml(getErrorMessage(error)) +
+              '<br><button type="button" class="pfms-link-btn" onclick="openSettings()">Try again</button>';
+          });
+      }
+
+      function renderSettings(data) {
+        settingsData = data;
+        document.getElementById('settings-status').classList.add('pfms-hidden');
+        document.getElementById('settings-body').classList.remove('pfms-hidden');
+
+        renderSettingsPeople(data.people && data.people.length ? data.people : pfmsPeople);
+        document.querySelector('input[name="settings-sheet-mode"][value="' + (data.autoDetect ? 'auto' : 'manual') + '"]').checked = true;
+        renderSettingsSheets();
+        renderSettingsLinks(data);
+      }
+
+      function renderSettingsPeople(names) {
+        var list = document.getElementById('settings-people-list');
+        list.innerHTML = '';
+        names.forEach(function (name) {
+          appendSettingsPersonRow(name);
+        });
+      }
+
+      function appendSettingsPersonRow(name) {
+        var list = document.getElementById('settings-people-list');
+        var item = document.createElement('li');
+
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'pfms-form-control';
+        input.maxLength = 40;
+        input.value = name || '';
+        input.placeholder = 'Name';
+        input.setAttribute('aria-label', 'Person name');
+
+        var remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'pfms-attachment-remove';
+        remove.innerHTML = '&times;';
+        remove.setAttribute('aria-label', 'Remove ' + (name || 'this person'));
+        remove.onclick = function () {
+          item.remove();
+        };
+
+        item.appendChild(input);
+        item.appendChild(remove);
+        list.appendChild(item);
+        return input;
+      }
+
+      function addSettingsPerson() {
+        appendSettingsPersonRow('').focus();
+      }
+
+      function saveSettingsPeople() {
+        var inputs = document.querySelectorAll('#settings-people-list input');
+        var names = Array.prototype.map.call(inputs, function (input) {
+          return input.value;
+        });
+        var button = document.getElementById('settings-people-save');
+        button.disabled = true;
+        setSettingsMessage('settings-people-message', 'Saving…');
+
+        runServer('savePfmsPeople', names)
+          .then(function (saved) {
+            applyPeopleList(saved);
+            renderSettingsPeople(saved);
+            renderDeviceSettings();
+            setSettingsMessage('settings-people-message', 'Names saved.');
+          })
+          .catch(function (error) {
+            console.error(error);
+            setSettingsMessage('settings-people-message', getErrorMessage(error), true);
+          })
+          .then(function () {
+            button.disabled = false;
+          });
+      }
+
+      function isSettingsManualMode() {
+        var checked = document.querySelector('input[name="settings-sheet-mode"]:checked');
+        return checked && checked.value === 'manual';
+      }
+
+      function renderSettingsSheets() {
+        var container = document.getElementById('settings-sheets');
+        var sheets = (settingsData && settingsData.sheets) || [];
+        var manual = isSettingsManualMode();
+        var useAutoValues = settingsData && settingsData.autoDetect;
+
+        if (!sheets.length) {
+          container.innerHTML = '<div class="pfms-dash-empty">No tabs found.</div>';
+          return;
+        }
+
+        var rows = sheets.map(function (sheet, index) {
+          var autoRole = sheet.detected === 'income' || sheet.detected === 'expense' ? sheet.detected : '';
+          var value = useAutoValues ? autoRole : sheet.configured;
+          var current = container.querySelector('select[data-index="' + index + '"]');
+          if (current && manual) {
+            value = current.value;
+          }
+          var options = [['', 'Not used'], ['income', 'Income'], ['expense', 'Expenses']].map(function (o) {
+            return '<option value="' + o[0] + '"' + (o[0] === value ? ' selected' : '') + '>' + o[1] + '</option>';
+          }).join('');
+          var usedAutomatically = autoRole ? (autoRole === 'income' ? 'Income' : 'Expenses') : 'Not used';
+          return '<tr><td>' + escapeHtml(sheet.name) +
+            '<span class="pfms-report-sub">' + escapeHtml(SETTINGS_ROLE_LABELS[sheet.detected] || '') + '</span></td>' +
+            '<td class="pfms-left">' + (manual
+              ? '<select class="pfms-form-control" data-index="' + index + '" aria-label="Use ' + escapeHtml(sheet.name) + ' as">' + options + '</select>'
+              : escapeHtml(usedAutomatically)) +
+            '</td></tr>';
+        }).join('');
+
+        container.innerHTML = '<div class="pfms-dash-table-wrap"><table class="pfms-dash-table pfms-settings-table"><thead><tr>' +
+          '<th>Tab</th><th class="pfms-left">' + (manual ? 'Use as' : 'Used as') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+      }
+
+      function saveSettingsSheets() {
+        var manual = isSettingsManualMode();
+        var config = { autoDetect: !manual, income: [], expense: [] };
+
+        if (manual) {
+          var selects = document.querySelectorAll('#settings-sheets select');
+          for (var i = 0; i < selects.length; i++) {
+            var sheet = settingsData.sheets[parseInt(selects[i].getAttribute('data-index'), 10)];
+            if (selects[i].value === 'income') {
+              config.income.push(sheet.name);
+            } else if (selects[i].value === 'expense') {
+              config.expense.push(sheet.name);
+            }
+          }
+        }
+
+        var button = document.getElementById('settings-sheets-save');
+        button.disabled = true;
+        setSettingsMessage('settings-sheets-message', 'Saving…');
+
+        runServer('savePfmsSheetSettings', config)
+          .then(function (data) {
+            dashboardCache = {};
+            reportData = null;
+            settingsData = data;
+            document.querySelector('input[name="settings-sheet-mode"][value="' + (data.autoDetect ? 'auto' : 'manual') + '"]').checked = true;
+            renderSettingsSheets();
+            setSettingsMessage('settings-sheets-message', 'Saved. Dashboard and Reports will use these tabs.');
+          })
+          .catch(function (error) {
+            console.error(error);
+            setSettingsMessage('settings-sheets-message', getErrorMessage(error), true);
+          })
+          .then(function () {
+            button.disabled = false;
+          });
+      }
+
+      function renderSettingsLinks(data) {
+        var link = function (url, text, missing) {
+          return url
+            ? '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener">' + escapeHtml(text) + '</a>'
+            : escapeHtml(text) + '<span class="pfms-settings-sheet-role">' + escapeHtml(missing) + '</span>';
+        };
+        document.getElementById('settings-links').innerHTML =
+          '<li>' + link(data.spreadsheet && data.spreadsheet.url, 'Spreadsheet: ' + ((data.spreadsheet && data.spreadsheet.name) || 'PFMS'), '') + '</li>' +
+          '<li>' + link(data.invoiceFolderUrl, 'Invoices folder', 'Created with the first invoice upload.') + '</li>' +
+          '<li>' + link(data.reportsFolderUrl, 'Reports folder', 'Created with the first Google Sheets export.') + '</li>';
+      }
 
       /* ---------- Reports ---------- */
 
