@@ -1119,6 +1119,249 @@
         }
       }
 
+      /* ---------- Reports ---------- */
+
+      .pfms-report-filters {
+        margin: 8px 0 16px;
+      }
+
+      .pfms-report-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .pfms-report-presets button {
+        border: 1px solid #d0d7de;
+        border-radius: 999px;
+        background: #ffffff;
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        color: var(--pfms-ink);
+        cursor: pointer;
+      }
+
+      .pfms-report-presets button.pfms-selected {
+        background: #1b4332;
+        border-color: #1b4332;
+        color: #ffffff;
+      }
+
+      .pfms-report-fields {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .pfms-report-fields .pfms-form-group {
+        margin-bottom: 12px;
+      }
+
+      .pfms-report-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .pfms-report-actions .pfms-btn-back {
+        margin: 0 0 0 auto;
+      }
+
+      .pfms-report-print-heading {
+        display: none;
+      }
+
+      .pfms-report-table .pfms-amount-cell {
+        font-weight: 700;
+      }
+
+      .pfms-report-table td {
+        vertical-align: top;
+      }
+
+      .pfms-report-sub {
+        display: block;
+        font-size: 12px;
+        color: var(--pfms-ink-secondary);
+        white-space: normal;
+        max-width: 280px;
+      }
+
+      .pfms-report-type {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        color: var(--pfms-ink-secondary);
+      }
+
+      .pfms-report-invoices a {
+        color: #1d4e89;
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      .pfms-report-table th.pfms-left,
+      .pfms-report-table td.pfms-left {
+        text-align: left;
+      }
+
+      @media screen and (max-width: 700px) {
+        .pfms-report-fields {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 0 10px;
+        }
+
+        .pfms-report-fields .pfms-form-control {
+          min-width: 0;
+          padding: 10px 8px;
+        }
+
+        .pfms-hide-phone {
+          display: none;
+        }
+
+        .pfms-report-actions .pfms-btn-toolbar {
+          flex: 1 1 45%;
+          padding: 10px 8px;
+          font-size: 13px;
+        }
+
+        .pfms-report-actions .pfms-btn-back {
+          margin: 0;
+        }
+
+        .pfms-report-table thead {
+          display: none;
+        }
+
+        .pfms-report-table tr {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 2px 12px;
+          padding: 10px 0;
+          border-bottom: 1px solid var(--pfms-grid);
+        }
+
+        .pfms-report-table td {
+          border: none;
+          padding: 0;
+          text-align: left;
+        }
+
+        .pfms-report-table td.pfms-col-date {
+          grid-column: 1;
+          grid-row: 1;
+          font-size: 12px;
+          color: var(--pfms-ink-secondary);
+        }
+
+        .pfms-report-table td.pfms-col-type {
+          grid-column: 2;
+          grid-row: 1;
+          text-align: right;
+        }
+
+        .pfms-report-table td.pfms-col-property {
+          grid-column: 1;
+          grid-row: 2;
+          font-weight: 600;
+          white-space: normal;
+        }
+
+        .pfms-report-table td.pfms-amount-cell {
+          grid-column: 2;
+          grid-row: 2;
+          text-align: right;
+        }
+
+        .pfms-report-table td.pfms-col-category {
+          grid-column: 1 / -1;
+          grid-row: 3;
+          font-size: 13px;
+          color: var(--pfms-ink-secondary);
+          white-space: normal;
+        }
+
+        .pfms-report-table td.pfms-col-entered,
+        .pfms-report-table td.pfms-report-invoices {
+          grid-row: 4;
+          font-size: 12px;
+          color: var(--pfms-ink-secondary);
+        }
+
+        .pfms-report-table td.pfms-report-invoices {
+          text-align: right;
+        }
+
+        .pfms-report-table td:empty {
+          display: none;
+        }
+      }
+
+      @media print {
+        html,
+        body {
+          height: auto;
+          overflow: visible;
+          display: block;
+          background: #ffffff;
+        }
+
+        .pfms-header,
+        .pfms-footer,
+        .pfms-no-print,
+        #screen-reports .pfms-panel-title {
+          display: none !important;
+        }
+
+        .pfms-content {
+          overflow: visible;
+        }
+
+        .pfms-screen {
+          padding: 0;
+        }
+
+        .pfms-panel,
+        .pfms-dash-card {
+          box-shadow: none;
+          border: none;
+          padding: 0;
+          max-width: none;
+        }
+
+        .pfms-dash-card {
+          margin-bottom: 18px;
+        }
+
+        .pfms-report-print-heading {
+          display: block;
+          margin-bottom: 16px;
+        }
+
+        .pfms-report-print-heading h1 {
+          font-size: 20px;
+          color: #1b4332;
+        }
+
+        .pfms-report-print-heading p {
+          font-size: 13px;
+          color: #5f6368;
+        }
+
+        .pfms-dash-table tr {
+          break-inside: avoid;
+        }
+      }
+
       @media (hover: none) and (pointer: coarse) {
         .pfms-drop-desktop {
           display: none;
@@ -1798,13 +2041,71 @@
         </div>
       </section>
 
-      <section id="screen-reports" class="pfms-screen<?!= initialScreen === 'reports' ? ' pfms-active' : '' ?>">
-        <div class="pfms-panel">
-          <h2 class="pfms-panel-title">Reports</h2>
-          <p class="pfms-panel-text">Version 1 placeholder screen.</p>
-          <button type="button" class="pfms-btn pfms-btn-back" onclick="showScreen('home')">
-            Back to Home
-          </button>
+      <section id="screen-reports" class="pfms-screen pfms-screen-form<?!= initialScreen === 'reports' ? ' pfms-active' : '' ?>">
+        <div class="pfms-panel pfms-panel-dashboard pfms-panel-reports">
+          <h2 class="pfms-panel-title">REPORTS</h2>
+
+          <div class="pfms-report-filters pfms-no-print">
+            <div class="pfms-report-presets" role="group" aria-label="Date range">
+              <button type="button" data-preset="this-month">This month</button>
+              <button type="button" data-preset="last-month">Last month</button>
+              <button type="button" data-preset="this-year">This year</button>
+              <button type="button" data-preset="last-year">Last year</button>
+            </div>
+
+            <div class="pfms-report-fields">
+              <div class="pfms-form-group">
+                <label class="pfms-form-label" for="report-from">From</label>
+                <input type="date" id="report-from" class="pfms-form-control">
+              </div>
+              <div class="pfms-form-group">
+                <label class="pfms-form-label" for="report-to">To</label>
+                <input type="date" id="report-to" class="pfms-form-control">
+              </div>
+              <div class="pfms-form-group">
+                <label class="pfms-form-label" for="report-property">Property</label>
+                <select id="report-property" class="pfms-form-control">
+                  <option value="">All properties</option>
+                </select>
+              </div>
+              <div class="pfms-form-group">
+                <label class="pfms-form-label" for="report-type">Type</label>
+                <select id="report-type" class="pfms-form-control">
+                  <option value="">All</option>
+                  <option value="income">Income</option>
+                  <option value="expense">Expenses</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pfms-report-actions">
+              <button type="button" id="report-export-sheet" class="pfms-btn pfms-btn-toolbar pfms-btn-new" onclick="exportReportSheet()">GOOGLE SHEETS</button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-refresh" onclick="downloadReportCsv()">DOWNLOAD CSV</button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-edit" onclick="printReport()">PRINT / PDF</button>
+              <button type="button" class="pfms-btn pfms-btn-toolbar pfms-btn-back" onclick="showScreen('home')">HOME</button>
+            </div>
+            <div id="report-action-message" class="pfms-dash-note pfms-hidden"></div>
+          </div>
+
+          <div id="report-print-heading" class="pfms-report-print-heading"></div>
+          <div id="report-status" class="pfms-dash-status">Loading&hellip;</div>
+
+          <div id="report-body" class="pfms-hidden">
+            <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title">Summary</h3>
+              <div id="report-summary"></div>
+            </div>
+
+            <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title">By category</h3>
+              <div id="report-categories"></div>
+            </div>
+
+            <div class="pfms-dash-card">
+              <h3 class="pfms-dash-card-title" id="report-rows-title">Payments</h3>
+              <div id="report-rows"></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1875,6 +2176,10 @@
 
         if (screenId === 'dashboard') {
           loadDashboard();
+        }
+
+        if (screenId === 'reports') {
+          openReports();
         }
       }
 
@@ -3401,6 +3706,308 @@
         }, 150);
       });
 
+      /* ---------- Reports ---------- */
+
+      var reportData = null;
+      var reportRequestId = 0;
+      var reportRunTimer = null;
+      var reportsInitialized = false;
+
+      function formatIsoDate(d) {
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      }
+
+      function getPresetRange(preset) {
+        var today = new Date();
+        var y = today.getFullYear();
+        var m = today.getMonth();
+        if (preset === 'last-month') {
+          return { from: formatIsoDate(new Date(y, m - 1, 1)), to: formatIsoDate(new Date(y, m, 0)) };
+        }
+        if (preset === 'this-year') {
+          return { from: y + '-01-01', to: formatIsoDate(today) };
+        }
+        if (preset === 'last-year') {
+          return { from: (y - 1) + '-01-01', to: (y - 1) + '-12-31' };
+        }
+        return { from: formatIsoDate(new Date(y, m, 1)), to: formatIsoDate(today) };
+      }
+
+      function highlightReportPreset() {
+        var from = document.getElementById('report-from').value;
+        var to = document.getElementById('report-to').value;
+        var buttons = document.querySelectorAll('.pfms-report-presets button');
+        for (var i = 0; i < buttons.length; i++) {
+          var range = getPresetRange(buttons[i].getAttribute('data-preset'));
+          buttons[i].classList.toggle('pfms-selected', range.from === from && range.to === to);
+        }
+      }
+
+      function applyReportPreset(preset) {
+        var range = getPresetRange(preset);
+        document.getElementById('report-from').value = range.from;
+        document.getElementById('report-to').value = range.to;
+        highlightReportPreset();
+        runReport();
+      }
+
+      function initReports() {
+        if (reportsInitialized) {
+          return;
+        }
+        reportsInitialized = true;
+
+        var buttons = document.querySelectorAll('.pfms-report-presets button');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].addEventListener('click', function () {
+            applyReportPreset(this.getAttribute('data-preset'));
+          });
+        }
+
+        ['report-from', 'report-to', 'report-property', 'report-type'].forEach(function (id) {
+          document.getElementById(id).addEventListener('change', function () {
+            highlightReportPreset();
+            clearTimeout(reportRunTimer);
+            reportRunTimer = setTimeout(runReport, 250);
+          });
+        });
+      }
+
+      function openReports() {
+        initReports();
+        if (!document.getElementById('report-from').value) {
+          applyReportPreset('this-month');
+          return;
+        }
+        if (!reportData) {
+          runReport();
+        }
+      }
+
+      function getReportFilters() {
+        return {
+          from: document.getElementById('report-from').value,
+          to: document.getElementById('report-to').value,
+          property: document.getElementById('report-property').value,
+          type: document.getElementById('report-type').value
+        };
+      }
+
+      function setReportStatus(html) {
+        var status = document.getElementById('report-status');
+        status.innerHTML = html || '';
+        status.classList.toggle('pfms-hidden', !html);
+      }
+
+      function showReportMessage(html) {
+        var box = document.getElementById('report-action-message');
+        box.innerHTML = html || '';
+        box.classList.toggle('pfms-hidden', !html);
+      }
+
+      function runReport() {
+        var requestId = ++reportRequestId;
+        showReportMessage('');
+        setReportStatus('Loading&hellip;');
+        document.getElementById('report-body').classList.add('pfms-hidden');
+
+        runServer('getReportData', getReportFilters())
+          .then(function (data) {
+            if (requestId === reportRequestId) {
+              renderReport(data);
+            }
+          })
+          .catch(function (error) {
+            console.error(error);
+            if (requestId === reportRequestId) {
+              setReportStatus('Could not load the report: ' + escapeHtml(getErrorMessage(error)) +
+                '<br><button type="button" class="pfms-link-btn" onclick="runReport()">Try again</button>');
+            }
+          });
+      }
+
+      function populateReportProperties(properties) {
+        var select = document.getElementById('report-property');
+        var current = select.value;
+        select.innerHTML = '<option value="">All properties</option>';
+        properties.forEach(function (name) {
+          var option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          select.appendChild(option);
+        });
+        if (current && properties.indexOf(current) === -1) {
+          var missing = document.createElement('option');
+          missing.value = current;
+          missing.textContent = current;
+          select.appendChild(missing);
+        }
+        select.value = current;
+      }
+
+      function describeReportFilters(f) {
+        var parts = [formatShortDate(f.from) + ', ' + f.from.substring(0, 4) + ' – ' + formatShortDate(f.to) + ', ' + f.to.substring(0, 4)];
+        parts.push(f.property || 'All properties');
+        parts.push(f.type === 'income' ? 'Income only' : (f.type === 'expense' ? 'Expenses only' : 'Income and expenses'));
+        return parts.join(' · ');
+      }
+
+      function renderReport(data) {
+        reportData = data;
+        populateReportProperties(data.properties || []);
+
+        if (!data.sources || !data.sources.length) {
+          document.getElementById('report-body').classList.add('pfms-hidden');
+          setReportStatus('No income or expense sheets were found. Open the Dashboard for setup help.');
+          return;
+        }
+
+        setReportStatus('');
+        document.getElementById('report-body').classList.remove('pfms-hidden');
+        document.getElementById('report-print-heading').innerHTML =
+          '<h1>PFMS Report</h1><p>' + escapeHtml(describeReportFilters(data.filters)) + '</p>';
+
+        renderReportSummary(data);
+        renderReportCategories(data);
+        renderReportRows(data);
+      }
+
+      function renderReportSummary(data) {
+        var container = document.getElementById('report-summary');
+        if (!data.totals.length) {
+          container.innerHTML = '<div class="pfms-dash-empty">No payments match these filters.</div>';
+          return;
+        }
+        container.innerHTML = '<div class="pfms-dash-table-wrap"><table class="pfms-dash-table"><thead><tr>' +
+          '<th>Currency</th><th>Income</th><th>Expenses</th><th>Net</th><th class="pfms-hide-phone">Payments</th></tr></thead><tbody>' +
+          data.totals.map(function (t) {
+            return '<tr><td>' + escapeHtml(t.currency) + '</td><td>' + formatMoney(t.income, t.currency) + '</td><td>' +
+              formatMoney(t.expense, t.currency) + '</td><td><strong>' + formatMoney(t.net, t.currency) + '</strong></td><td class="pfms-hide-phone">' + t.count + '</td></tr>';
+          }).join('') + '</tbody></table></div>';
+      }
+
+      function renderReportCategories(data) {
+        var container = document.getElementById('report-categories');
+        if (!data.categories.length) {
+          container.innerHTML = '<div class="pfms-dash-empty">Nothing to show.</div>';
+          return;
+        }
+        container.innerHTML = '<div class="pfms-dash-table-wrap"><table class="pfms-dash-table"><thead><tr>' +
+          '<th>Category</th><th class="pfms-left">Type</th><th class="pfms-hide-phone">Payments</th><th>Total</th></tr></thead><tbody>' +
+          data.categories.map(function (group) {
+            return group.rows.map(function (r) {
+              return '<tr><td>' + escapeHtml(r.category) + '</td><td class="pfms-left">' + reportTypeBadge(r.type) +
+                '</td><td class="pfms-hide-phone">' + r.count + '</td><td>' + formatMoney(r.amount, group.currency) + '</td></tr>';
+            }).join('');
+          }).join('') + '</tbody></table></div>';
+      }
+
+      function reportTypeBadge(type) {
+        var isIncome = type === 'income';
+        return '<span class="pfms-report-type"><span class="pfms-swatch ' + (isIncome ? 'pfms-swatch-income' : 'pfms-swatch-expense') +
+          '"></span>' + (isIncome ? 'Income' : 'Expense') + '</span>';
+      }
+
+      function renderReportRows(data) {
+        var title = document.getElementById('report-rows-title');
+        var container = document.getElementById('report-rows');
+        title.textContent = 'Payments (' + data.rowCount + ')';
+
+        if (!data.rows.length) {
+          container.innerHTML = '<div class="pfms-dash-empty">No payments match these filters.</div>';
+          return;
+        }
+
+        var note = data.truncated
+          ? '<div class="pfms-dash-note">Showing the first ' + data.rows.length + ' of ' + data.rowCount +
+            ' payments. Narrow the dates, or use Google Sheets for everything.</div>'
+          : '';
+
+        container.innerHTML = note + '<div class="pfms-dash-table-wrap"><table class="pfms-dash-table pfms-report-table"><thead><tr>' +
+          '<th>Date</th><th class="pfms-left">Type</th><th class="pfms-left">Property</th><th class="pfms-left">Category</th>' +
+          '<th class="pfms-left">Entered by</th><th>Amount</th><th>Invoices</th></tr></thead><tbody>' +
+          data.rows.map(function (r) {
+            var isIncome = r.type === 'income';
+            var invoices = (r.attachments || []).map(function (a) {
+              return '<a href="' + escapeHtml(a.url) + '" target="_blank" rel="noopener" title="' + escapeHtml(a.name) +
+                '" aria-label="Open ' + escapeHtml(a.name) + '">&#x1F4CE;</a>';
+            }).join(' ');
+            return '<tr>' +
+              '<td class="pfms-col-date">' + escapeHtml(formatShortDate(r.date) + ', ' + r.date.substring(0, 4)) + '</td>' +
+              '<td class="pfms-left pfms-col-type">' + reportTypeBadge(r.type) + '</td>' +
+              '<td class="pfms-left pfms-col-property">' + escapeHtml(r.property || 'No property') + '</td>' +
+              '<td class="pfms-left pfms-col-category">' + escapeHtml(r.category || '') +
+                (r.notes ? '<span class="pfms-report-sub">' + escapeHtml(r.notes) + '</span>' : '') + '</td>' +
+              '<td class="pfms-left pfms-col-entered">' + escapeHtml(r.enteredBy || '') + '</td>' +
+              '<td class="pfms-amount-cell">' + (isIncome ? '+' : '−') + formatMoney(r.amount, r.currency) + '</td>' +
+              '<td class="pfms-report-invoices">' + invoices + '</td>' +
+              '</tr>';
+          }).join('') + '</tbody></table></div>';
+      }
+
+      function csvCell(value) {
+        var text = String(value === null || value === undefined ? '' : value);
+        return /[",\n\r]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+      }
+
+      function downloadReportCsv() {
+        if (!reportData || !reportData.rows) {
+          return;
+        }
+        var lines = [['Date', 'Type', 'Property', 'Category', 'Amount', 'Currency', 'Entered By', 'Notes', 'Invoices'].join(',')];
+        reportData.rows.forEach(function (r) {
+          lines.push([
+            r.date,
+            r.type === 'income' ? 'Income' : 'Expense',
+            r.property,
+            r.category,
+            (r.type === 'income' ? r.amount : -r.amount).toFixed(2),
+            r.currency,
+            r.enteredBy,
+            r.notes,
+            (r.attachments || []).map(function (a) { return a.url; }).join(' ')
+          ].map(csvCell).join(','));
+        });
+
+        var f = reportData.filters;
+        var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'PFMS report ' + f.from + ' to ' + f.to + '.csv';
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(function () {
+          URL.revokeObjectURL(link.href);
+          link.remove();
+        }, 1000);
+        showReportMessage('CSV downloaded. If nothing appeared, use Google Sheets instead.');
+      }
+
+      function exportReportSheet() {
+        var button = document.getElementById('report-export-sheet');
+        button.disabled = true;
+        button.textContent = 'Creating…';
+        showReportMessage('');
+
+        runServer('exportReportToSheet', getReportFilters())
+          .then(function (result) {
+            showReportMessage('Saved to Drive &rsaquo; PFMS Reports: <a href="' + escapeHtml(result.url) +
+              '" target="_blank" rel="noopener">' + escapeHtml(result.name) + '</a>');
+          })
+          .catch(function (error) {
+            console.error(error);
+            showReportMessage('Could not create the sheet: ' + escapeHtml(getErrorMessage(error)));
+          })
+          .then(function () {
+            button.disabled = false;
+            button.textContent = 'GOOGLE SHEETS';
+          });
+      }
+
+      function printReport() {
+        window.print();
+      }
+
       /* ---------- Entered by ---------- */
 
       // Shown until the PFMS_PEOPLE Script Property is set (see People.gs).
@@ -3925,6 +4532,7 @@
             options.setButtonState(false);
             clearAttachments(prefix);
             dashboardCache = {};
+            reportData = null;
             renderSuccessAttachments(prefix, savedAttachments, logFailed);
             options.onSuccess(payment);
           })
