@@ -42,7 +42,7 @@ var PFMS_ATTACHMENT_HEADERS = [
  * Saves one uploaded file to Drive.
  *
  * @param {{name: string, mimeType: string, base64: string}} upload
- * @param {{paymentType: string, property: string, date: string}} meta
+ * @param {{paymentType: string, property: string, date: string, enteredBy: string}} meta
  * @return {{fileId: string, name: string, url: string, mimeType: string, size: number}}
  */
 function uploadPaymentAttachment(upload, meta) {
@@ -68,7 +68,7 @@ function uploadPaymentAttachment(upload, meta) {
   var folder = getInvoiceFolder_(paymentDate.substring(0, 4), meta.property);
   var file = folder.createFile(blob);
 
-  var enteredBy = getCurrentUserEmail_();
+  var enteredBy = resolveEnteredBy_(meta.enteredBy);
   file.setDescription(
     'PFMS ' + paymentType + ' | ' + (meta.property || '') + ' | ' + paymentDate +
     (enteredBy ? ' | entered by ' + enteredBy : '')
@@ -100,7 +100,7 @@ function logPaymentAttachments(paymentType, payment, attachments) {
 
   var sheet = getAttachmentsSheet_();
   var now = new Date();
-  var enteredBy = getCurrentUserEmail_();
+  var enteredBy = resolveEnteredBy_(payment.enteredBy);
   var category = payment.expenseCategory || payment.incomeType || '';
 
   var rows = attachments.map(function (attachment) {
@@ -222,6 +222,13 @@ function normalizePaymentDate_(value) {
     return text;
   }
   return Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+}
+
+// Prefer the name picked on the form; fall back to the Google account
+// email (often blank for other people on regular Gmail accounts).
+function resolveEnteredBy_(pickedName) {
+  var name = String(pickedName || '').trim().substring(0, 80);
+  return name || getCurrentUserEmail_();
 }
 
 function getCurrentUserEmail_() {
