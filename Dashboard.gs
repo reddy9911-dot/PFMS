@@ -160,8 +160,8 @@ function getDashboardData(options) {
 /* ---------- reading the sheets ---------- */
 
 // The income and expense tabs, chosen by Script Properties when set and
-// by headers / tab names otherwise. Shared by Dashboard, Reports and
-// EnteredBy.gs so they always agree on which tabs hold payments.
+// by headers / tab names otherwise. Shared by Dashboard, Reports and the
+// payment saving in Code.gs so they always agree on which tabs hold payments.
 function listPaymentSheets_() {
   var spreadsheet = getPfmsSpreadsheet_();
   var scriptProperties = PropertiesService.getScriptProperties();
